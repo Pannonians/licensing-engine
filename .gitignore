@@ -1,0 +1,8 @@
+frontend/node_modules
+server/node_modules
+.env
+frontend/.env
+server/.env
+node_modules
+proxy/certs
+server_log

@@ -1,0 +1,29 @@
+{
+  "name": "server",
+  "version": "0.1.0",
+  "main": "index.js",
+  "scripts": {
+    "start": "HOST=0.0.0.0 node src/index.js",
+    "dev": "nodemon src/index.js",
+    "prisma:migrations:run": "yarn prisma migrate dev",
+    "prisma:migrations:reset": "yarn prisma migrate reset"
+  },
+  "prisma": {
+    "seed": "node prisma/seed.js"
+  },
+  "dependencies": {
+    "@prisma/client": "^4.2.1",
+    "body-parser": "^1.20.1",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.1",
+    "express": "^4.18.1",
+    "helmet": "^6.0.1",
+    "morgan": "^1.10.0",
+    "prisma": "^4.2.1",
+    "rotating-file-stream": "^2",
+    "yup": "^0.32.11"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.19"
+  }
+}
