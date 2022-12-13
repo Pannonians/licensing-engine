@@ -20,7 +20,7 @@ After that, run:
 This will allow us to actually access localhost with a user-friendly URL, allowing a bit more friendlier DevUX. 💻
 ```sh
 vim /etc/hosts
-127.0.0.1 licensing.local
+127.0.0.1 licensing.localhost
 ```
 
 ## Run most of the app:
