@@ -11,10 +11,51 @@ datasource db {
 }
 
 // 👇 add the tables model here
-// TODO: Added Todo for example, @Nikolina will continue on this
 
-model Todo {
-  id   Int    @id @default(autoincrement())
-  name String @db.VarChar(250)
-  description String? @db.Text
+model Licence {
+  id            String          @id @default(cuid())
+  name          String          @db.VarChar(240)
+  description   String          @db.Text
+  DomainLicense DomainLicense[]
+  LicenseToken  LicenseToken[]
+}
+
+model Domain {
+  id            String          @id @default(cuid())
+  name          String          @db.Char(100)
+  active        Boolean         @default(false)
+  DomainLicense DomainLicense[]
+}
+
+model DomainLicense {
+  id        String  @id @default(cuid())
+  domains   Domain  @relation(fields: [domainId], references: [id])
+  licences  Licence @relation(fields: [licenceId], references: [id])
+  domainId  String
+  licenceId String
+}
+
+model LicenseToken {
+  id        String  @id @default(cuid())
+  licenses  Licence @relation(fields: [licenceId], references: [id])
+  licenceId String
+  Token     Token[]
+}
+
+model Token {
+  id             String       @id @default(cuid())
+  token          String       @db.Char(64)
+  active         Boolean      @default(false)
+  licenceTokens  LicenseToken @relation(fields: [licenceTokenId], references: [id])
+  licenceTokenId String
+  App            App?         @relation(fields: [appId], references: [id])
+  appId          String?
+}
+
+model App {
+  id          String  @id @unique
+  name        String  @db.Char(100)
+  active      Boolean @default(false)
+  description String  @db.Text
+  tokens      Token[]
 }
