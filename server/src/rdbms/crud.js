@@ -1,5 +1,5 @@
 const express = require("express");
-const prisma = require('../prisma');
+const prisma = require("../prisma");
 
 module.exports = (Collection, options) => {
   const readMany = async (req, res, next) => {
@@ -19,7 +19,7 @@ module.exports = (Collection, options) => {
 
       const item = await Collection.findUnique({
         where: {
-          id: parseInt(_id),
+          id: _id,
         },
       });
 
@@ -47,21 +47,21 @@ module.exports = (Collection, options) => {
 
   const update = async (req, res, next) => {
     try {
-      const { todoId: _id } = req.params;
+      const { _id } = req.params;
 
-      const todoExists = await Collection.findUnique({
+      const itemExists = await Collection.findUnique({
         where: {
-          id: parseInt(_id),
+          id: _id,
         },
       });
 
-      if (!todoExists) {
-        throw new Error(`Todo with id ${_id} not exist`);
+      if (!itemExists) {
+        throw new Error(`Item with id ${_id} not exist`);
       }
 
       const updatedItem = await Collection.update({
         where: {
-          id: parseInt(_id),
+          id: _id,
         },
         data: { ...req.body },
       });
@@ -75,11 +75,11 @@ module.exports = (Collection, options) => {
 
   const remove = async (req, res, next) => {
     try {
-      const { _id } = req.params;
+      const _id = req.params;
 
       const deletedItem = await Collection.delete({
         where: {
-          id: parseInt(_id),
+          id: _id,
         },
       });
 
@@ -102,7 +102,7 @@ module.exports = (Collection, options) => {
     readOne: [...options.middleware.readOne, readOne],
     update: [...options.middleware.update, update],
     remove: [...options.middleware.remove, remove],
-  }
+  };
 
   router.post("/", ...actions.create);
   router.get("/", ...actions.readMany);
