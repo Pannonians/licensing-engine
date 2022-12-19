@@ -4,8 +4,7 @@ module.exports = {
       name: "server",
       cwd: "./server",
       script: "yarn",
-      args: "run start",
-      watch: ".",
+      args: "run dev",
       env: {
         NODE_ENV: "development",
       },
