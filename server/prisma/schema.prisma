@@ -12,7 +12,7 @@ datasource db {
 
 // 👇 add the tables model here
 
-model Licence {
+model License {
   id            String          @id @default(cuid())
   name          String          @db.VarChar(240)
   description   String          @db.Text
@@ -30,14 +30,14 @@ model Domain {
 model DomainLicense {
   id        String  @id @default(cuid())
   domains   Domain  @relation(fields: [domainId], references: [id])
-  licences  Licence @relation(fields: [licenceId], references: [id])
+  licences  License @relation(fields: [licenceId], references: [id])
   domainId  String
   licenceId String
 }
 
 model LicenseToken {
   id        String  @id @default(cuid())
-  licenses  Licence @relation(fields: [licenceId], references: [id])
+  licenses  License @relation(fields: [licenceId], references: [id])
   licenceId String
   Token     Token[]
 }
