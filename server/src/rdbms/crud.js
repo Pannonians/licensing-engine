@@ -75,7 +75,7 @@ module.exports = (Collection, options) => {
 
   const remove = async (req, res, next) => {
     try {
-      const _id = req.params;
+      const { _id } = req.params;
 
       const deletedItem = await Collection.delete({
         where: {
