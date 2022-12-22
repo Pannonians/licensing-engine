@@ -13,49 +13,59 @@ datasource db {
 // 👇 add the tables model here
 
 model License {
-  id            String          @id @default(cuid())
-  name          String          @db.VarChar(240)
-  description   String          @db.Text
-  DomainLicense DomainLicense[]
-  LicenseToken  LicenseToken[]
+  id             String          @id @default(cuid())
+  name           String          @db.VarChar(240)
+  description    String          @db.Text
+  DomainLicenses DomainLicense[]
+  LicenseTokens  LicenseToken[]
 }
 
 model Domain {
-  id            String          @id @default(cuid())
-  name          String          @db.Char(100)
-  active        Boolean         @default(false)
-  DomainLicense DomainLicense[]
+  id             String          @id @default(cuid())
+  name           String          @db.Char(100)
+  active         Boolean         @default(false)
+  DomainLicenses DomainLicense[]
 }
 
 model DomainLicense {
   id        String  @id @default(cuid())
-  domains   Domain  @relation(fields: [domainId], references: [id])
-  licences  License @relation(fields: [licenceId], references: [id])
+  domain    Domain  @relation(fields: [domainId], references: [id])
+  license   License @relation(fields: [licenseId], references: [id])
   domainId  String
-  licenceId String
+  licenseId String
 }
 
 model LicenseToken {
   id        String  @id @default(cuid())
-  licenses  License @relation(fields: [licenceId], references: [id])
-  licenceId String
-  Token     Token[]
+  license   License @relation(fields: [licenseId], references: [id])
+  token     Token   @relation(fields: [tokenId], references: [id])
+  licenseId String
+  tokenId   String
 }
 
 model Token {
-  id             String       @id @default(cuid())
-  token          String       @db.Char(64)
-  active         Boolean      @default(false)
-  licenceTokens  LicenseToken @relation(fields: [licenceTokenId], references: [id])
-  licenceTokenId String
-  App            App?         @relation(fields: [appId], references: [id])
-  appId          String?
+  id            String         @id @default(cuid())
+  token         String         @db.Char(64)
+  active        Boolean        @default(false)
+  App           App?           @relation(fields: [appId], references: [id])
+  appId         String?
+  LicenseTokens LicenseToken[]
+  AppTokens     AppToken[]
 }
 
 model App {
-  id          String  @id @unique
-  name        String  @db.Char(100)
-  active      Boolean @default(false)
-  description String  @db.Text
+  id          String     @id @default(cuid())
+  name        String     @db.Char(100)
+  active      Boolean    @default(false)
+  description String     @db.Text
   tokens      Token[]
+  AppTokens   AppToken[]
+}
+
+model AppToken {
+  id      String  @id @default(cuid())
+  app     App?    @relation(fields: [appId], references: [id])
+  appId   String?
+  token   Token   @relation(fields: [tokenId], references: [id])
+  tokenId String
 }

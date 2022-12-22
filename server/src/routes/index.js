@@ -1,5 +1,10 @@
 const router = require("express").Router();
 const prisma = require("../prisma");
+const licenseValidation = require("../validations/licenseValidation");
+const domainValidation = require("../validations/domainValidation");
+const tokenValidation = require("../validations/tokenValidation");
+const appValidation = require("../validations/appValidation");
+const errorMiddleware = require("../middleware/error.middleware");
 
 const license = prisma.license;
 const domain = prisma.domain;
@@ -10,10 +15,10 @@ router.use(
   "/license",
   require("../rdbms/crud")(license, {
     middleware: {
-      create: [],
+      create: [licenseValidation],
       readMany: [],
       readOne: [],
-      update: [],
+      update: [licenseValidation],
       remove: [],
     },
   })
@@ -23,10 +28,10 @@ router.use(
   "/domain",
   require("../rdbms/crud")(domain, {
     middleware: {
-      create: [],
+      create: [domainValidation],
       readMany: [],
       readOne: [],
-      update: [],
+      update: [domainValidation],
       remove: [],
     },
   })
@@ -36,10 +41,10 @@ router.use(
   "/token",
   require("../rdbms/crud")(token, {
     middleware: {
-      create: [],
+      create: [tokenValidation],
       readMany: [],
       readOne: [],
-      update: [],
+      update: [tokenValidation],
       remove: [],
     },
   })
@@ -49,10 +54,10 @@ router.use(
   "/app",
   require("../rdbms/crud")(app, {
     middleware: {
-      create: [],
+      create: [appValidation],
       readMany: [],
       readOne: [],
-      update: [],
+      update: [appValidation],
       remove: [],
     },
   })
