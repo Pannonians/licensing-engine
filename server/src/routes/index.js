@@ -15,10 +15,10 @@ router.use(
   "/license",
   require("../rdbms/crud")(license, {
     middleware: {
-      create: [errorMiddleware, licenseValidation],
+      create: [licenseValidation],
       readMany: [],
       readOne: [],
-      update: [errorMiddleware, licenseValidation],
+      update: [licenseValidation],
       remove: [],
     },
   })
@@ -28,10 +28,10 @@ router.use(
   "/domain",
   require("../rdbms/crud")(domain, {
     middleware: {
-      create: [errorMiddleware, domainValidation],
+      create: [domainValidation],
       readMany: [],
       readOne: [],
-      update: [errorMiddleware, domainValidation],
+      update: [domainValidation],
       remove: [],
     },
   })
@@ -41,10 +41,10 @@ router.use(
   "/token",
   require("../rdbms/crud")(token, {
     middleware: {
-      create: [errorMiddleware, tokenValidation],
+      create: [tokenValidation],
       readMany: [],
       readOne: [],
-      update: [errorMiddleware, tokenValidation],
+      update: [tokenValidation],
       remove: [],
     },
   })
@@ -54,10 +54,10 @@ router.use(
   "/app",
   require("../rdbms/crud")(app, {
     middleware: {
-      create: [errorMiddleware, appValidation],
+      create: [appValidation],
       readMany: [],
       readOne: [],
-      update: [errorMiddleware, appValidation],
+      update: [appValidation],
       remove: [],
     },
   })

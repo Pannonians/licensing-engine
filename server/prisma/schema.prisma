@@ -13,18 +13,18 @@ datasource db {
 // 👇 add the tables model here
 
 model License {
-  id            String          @id @default(cuid())
-  name          String          @db.VarChar(240)
-  description   String          @db.Text
-  DomainLicense DomainLicense[]
-  LicenseToken  LicenseToken[]
+  id             String          @id @default(cuid())
+  name           String          @db.VarChar(240)
+  description    String          @db.Text
+  DomainLicenses DomainLicense[]
+  LicenseTokens  LicenseToken[]
 }
 
 model Domain {
-  id            String          @id @default(cuid())
-  name          String          @db.Char(100)
-  active        Boolean         @default(false)
-  DomainLicense DomainLicense[]
+  id             String          @id @default(cuid())
+  name           String          @db.Char(100)
+  active         Boolean         @default(false)
+  DomainLicenses DomainLicense[]
 }
 
 model DomainLicense {
@@ -44,13 +44,13 @@ model LicenseToken {
 }
 
 model Token {
-  id           String         @id @default(cuid())
-  token        String         @db.Char(64)
-  active       Boolean        @default(false)
-  App          App?           @relation(fields: [appId], references: [id])
-  appId        String?
-  LicenseToken LicenseToken[]
-  AppToken     AppToken[]
+  id            String         @id @default(cuid())
+  token         String         @db.Char(64)
+  active        Boolean        @default(false)
+  App           App?           @relation(fields: [appId], references: [id])
+  appId         String?
+  LicenseTokens LicenseToken[]
+  AppTokens     AppToken[]
 }
 
 model App {
@@ -58,8 +58,8 @@ model App {
   name        String     @db.Char(100)
   active      Boolean    @default(false)
   description String     @db.Text
-  token       Token[]
-  AppToken    AppToken[]
+  tokens      Token[]
+  AppTokens   AppToken[]
 }
 
 model AppToken {
