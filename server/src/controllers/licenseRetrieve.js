@@ -11,7 +11,7 @@ const licenseRetrieve = () => async (req, res, next) => {
       select: {
         name: true,
       },
-    });
+    }).map((item) => { return item['name']});
     if (!pickUpLicensesToken) {
       const reqDomain = req.domain;
       const pickUpLicensesDomain = await license.findUnique({
@@ -21,7 +21,7 @@ const licenseRetrieve = () => async (req, res, next) => {
         select: {
           name: true,
         },
-      });
+      }).map((item) => {return item['name']});
       if (!pickUpLicensesDomain) {
         throw new Error(
           `no licenses were found for ${reqToken} token or ${reqDomain} domain`
