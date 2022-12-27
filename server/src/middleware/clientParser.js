@@ -19,7 +19,7 @@ const token = prisma.token;
         req.domain = clientDomain;
         next();
       }
-      const sanitizedToken = sanitizeToken.split(' ')[1];
+      const sanitizedToken = sanitizeToken.replace(/Bearer|Basic|/, '').trim();
       const clientToken = await token.findUnique({
         where: { token: sanitizedToken },
       });
