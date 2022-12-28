@@ -4,7 +4,9 @@ const licenseValidation = require("../validations/licenseValidation");
 const domainValidation = require("../validations/domainValidation");
 const tokenValidation = require("../validations/tokenValidation");
 const appValidation = require("../validations/appValidation");
-const errorMiddleware = require("../middleware/error.middleware");
+const licenseRetrieve = require("../controllers/licenseRetrieve");
+const clientParser = require("../middleware/clientParser");
+
 
 const license = prisma.license;
 const domain = prisma.domain;
@@ -61,6 +63,10 @@ router.use(
       remove: [],
     },
   })
+);
+
+router.use(
+  "/get-licenses", clientParser, licenseRetrieve
 );
 
 module.exports = router;
