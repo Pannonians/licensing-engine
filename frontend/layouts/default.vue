@@ -81,6 +81,27 @@ export default {
           title: 'Inspire',
           to: '/inspire',
         },
+        {
+          icon: 'mdi-application',
+          title: 'App',
+          to: '/app',
+
+        },
+        {
+          icon: 'mdi-application',
+          title: 'Domain',
+          to: '/domain',
+        },
+        {
+          icon: 'mdi-application',
+          title: 'License',
+          to: '/license',
+        },
+        {
+          icon: 'mdi-application',
+          title: 'Token',
+          to: '/token'
+        }
       ],
       miniVariant: false,
       right: true,
