@@ -153,7 +153,10 @@ export default {
       val || close()
     },
     dialogDelete(val) {
-      val || close()
+      val || this.closeDelete()
+    },
+    dialogUpdate(val) {
+      val || this.closeUpdate()
     },
   },
 
@@ -173,13 +176,18 @@ export default {
           description: this.$data.editedItem.description,
         })
         .then((response) => {
+          this.licenseList.push(response.data)
           this.createResponse = response.data
         })
+      this.close()
     },
     deleteLicense(id) {
       this.$axios.delete('/api/license/' + id).then((response) => {
+        const index = this.licenseList.findIndex((list) => list.id === id)
+        if (~index) this.licenseList.splice(index, 1)
         this.createResponse = response.data
       })
+      this.dialogDelete = false
     },
     updateLicense(id) {
       this.$axios
@@ -188,8 +196,10 @@ export default {
           description: this.$data.editedItem.description,
         })
         .then((response) => {
+          this.getLicenses()
           this.createResponse = response.data
         })
+      this.closeUpdate()
     },
     editItem(item) {
       this.editedIndex = this.licenseList.indexOf(item)

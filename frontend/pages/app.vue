@@ -192,13 +192,18 @@ export default {
           active: this.$data.editedItem.active,
         })
         .then((response) => {
+          this.appList.push(response.data)
           this.createResponse = response.data
         })
+      this.close()
     },
     deleteApp(id) {
       this.$axios.delete('/api/app/' + id).then((response) => {
+        const index = this.appList.findIndex((list) => list.id === id)
+        if (~index) this.appList.splice(index, 1)
         this.createResponse = response.data
       })
+      this.closeDelete()
     },
     updateApp(id) {
       this.$axios
@@ -208,8 +213,10 @@ export default {
           active: this.$data.editedItem.active,
         })
         .then((response) => {
+          this.getApps()
           this.createResponse = response.data
         })
+      this.closeUpdate()
     },
     editItem(item) {
       this.editedIndex = this.appList.indexOf(item)

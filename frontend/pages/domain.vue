@@ -1,5 +1,10 @@
 <template>
-  <v-data-table :headers="headers" :items="domainList" class="elevation-1">
+  <v-data-table
+    ref="domainList"
+    :headers="headers"
+    :items="domainList"
+    class="elevation-1"
+  >
     <template #top>
       <v-toolbar flat>
         <v-toolbar-title>Domain List</v-toolbar-title>
@@ -45,7 +50,7 @@
           </v-card>
         </v-dialog>
         <v-dialog v-model="dialogUpdate" max-width="600px">
-          <v-card>
+          <v-card :key="componentKey">
             <v-card-title>
               <span class="text-h5">{{ formTitle }}</span>
             </v-card-title>
@@ -120,6 +125,7 @@
 export default {
   data() {
     return {
+      componentKey: 0,
       dialog: false,
       dialogUpdate: false,
       dialogDelete: false,
@@ -159,7 +165,10 @@ export default {
       val || close()
     },
     dialogDelete(val) {
-      val || close()
+      val || this.closeDelete()
+    },
+    dialogUpdate(val) {
+      val || this.closeUpdate()
     },
   },
 
@@ -181,13 +190,18 @@ export default {
           active: this.$data.editedItem.active,
         })
         .then((response) => {
+          this.domainList.push(response.data)
           this.createResponse = response.data
         })
+      this.close()
     },
     deleteDomain(id) {
       this.$axios.delete('/api/domain/' + id).then((response) => {
+        const index = this.domainList.findIndex((list) => list.id === id)
+        if (~index) this.domainList.splice(index, 1)
         this.createResponse = response.data
       })
+      this.closeDelete()
     },
 
     updateDomain(id) {
@@ -197,8 +211,11 @@ export default {
           active: this.$data.editedItem.active,
         })
         .then((response) => {
+          this.componentKey += 1
           this.createResponse = response.data
+          this.getDomains()
         })
+      this.closeUpdate()
     },
     editItem(item) {
       this.editedIndex = this.domainList.indexOf(item)

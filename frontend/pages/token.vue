@@ -178,13 +178,18 @@ export default {
           active: this.$data.editedItem.active,
         })
         .then((response) => {
+          this.tokenList.push(response.data)
           this.createResponse = response.data
         })
+      this.close()
     },
     deleteToken(id) {
       this.$axios.delete('/api/token/' + id).then((response) => {
+        const index = this.tokenList.findIndex((list) => list.id === id)
+        if (~index) this.tokenList.splice(index, 1)
         this.createResponse = response.data
       })
+      this.closeDelete()
     },
     updateToken(id) {
       this.$axios
@@ -193,8 +198,10 @@ export default {
           active: this.$data.editedItem.active,
         })
         .then((response) => {
+          this.getTokens()
           this.createResponse = response.data
         })
+      this.closeUpdate()
     },
     editItem(item) {
       this.editedIndex = this.tokenList.indexOf(item)
