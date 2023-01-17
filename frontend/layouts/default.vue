@@ -62,7 +62,7 @@
   </v-app>
 </template>
 
-<script>
+<script>;
 export default {
   name: 'DefaultLayout',
   data() {
@@ -72,41 +72,41 @@ export default {
       fixed: false,
       items: [
         {
-          icon: 'mdi-apps',
+          icon: 'mdi-home',
           title: 'Welcome',
           to: '/',
         },
         {
-          icon: 'mdi-chart-bubble',
-          title: 'Inspire',
-          to: '/inspire',
-        },
-        {
-          icon: 'mdi-application',
+          icon: 'mdi-apps',
           title: 'App',
           to: '/app',
 
         },
         {
-          icon: 'mdi-application',
+          icon: 'mdi-domain',
           title: 'Domain',
           to: '/domain',
         },
         {
-          icon: 'mdi-application',
+          icon: 'mdi-license',
           title: 'License',
           to: '/license',
         },
         {
-          icon: 'mdi-application',
+          icon: 'mdi-access-point',
           title: 'Token',
           to: '/token'
-        }
+        },
+        {
+          icon: 'mdi-cog',
+          title: 'Configuration',
+          to: '/configuration'
+        },
       ],
       miniVariant: false,
       right: true,
       rightDrawer: false,
-      title: 'Vuetify.js',
+      title: 'Case3DLicensing',
     }
   },
 }

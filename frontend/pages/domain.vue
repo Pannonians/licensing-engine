@@ -37,6 +37,15 @@
                       hide-details
                     ></v-checkbox>
                   </v-col>
+                  
+                  <v-col cols="12">
+                    <v-combobox
+                      :value="licenseList"
+                      label="Licenses"
+                      multiple
+                      chips
+                    ></v-combobox>
+                  </v-col>
                 </v-row>
               </v-container>
             </v-card-text>
@@ -123,6 +132,7 @@
 
 <script>
 export default {
+  name: 'Domain',
   data() {
     return {
       componentKey: 0,

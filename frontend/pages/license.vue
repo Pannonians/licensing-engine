@@ -1,119 +1,153 @@
 <template>
-  <v-data-table :headers="headers" :items="licenseList" class="elevation-1">
-    <template #top>
-      <v-toolbar flat>
-        <v-toolbar-title>License List</v-toolbar-title>
-        <v-divider class="mx-4" inset vertical></v-divider>
-        <v-spacer></v-spacer>
-        <v-dialog v-model="dialog" max-width="600px">
-          <template #activator="{ on, attrs }">
-            <v-btn color="primary" dark class="mb-2" v-bind="attrs" v-on="on">
-              New
-            </v-btn>
-          </template>
-          <v-card>
-            <v-card-title>
-              <span class="text-h5">{{ formTitle }}</span>
-            </v-card-title>
-            <v-card-text>
-              <v-container>
+  <client-only>
+    <v-data-table :headers="headers" :items="licenseList" class="elevation-1">
+      <template #top>
+        <v-toolbar flat>
+          <v-toolbar-title>License List</v-toolbar-title>
+          <v-divider class="mx-4" inset vertical></v-divider>
+          <v-spacer></v-spacer>
+          <v-dialog v-model="dialog" max-width="800px">
+            <template #activator="{ on, attrs }">
+              <v-btn color="primary" dark class="mb-2" v-bind="attrs" v-on="on">
+                New
+              </v-btn>
+            </template>
+            <v-card>
+              <v-card-title>
+                <span class="text-h5">{{ formTitle }}</span>
+              </v-card-title>
+              <v-card-text>
                 <v-row justify="center">
-                  <v-col cols="12">
-                    <v-text-field
-                      v-model="editedItem.name"
-                      label="license name"
-                    ></v-text-field>
-                  </v-col>
-                  <v-col cols="12">
+                  <v-container>
+                    <v-col cols="12">
+                      <v-text-field
+                        v-model="editedItem.name"
+                        label="license name"
+                      ></v-text-field>
+                    </v-col>
+                  </v-container>
+                  <v-container>
+                    <v-col cols="12">
+                      <v-spacer></v-spacer>
+                      <h4 class="white--text">description</h4>
+                      <quill-editor
+                        id="app"
+                        ref="quillEditor"
+                        v-model="editedItem.description"
+                        class="editor"
+                        :options="editorOption"
+                        @blur="onEditorBlur($event)"
+                        @focus="onEditorFocus($event)"
+                        @ready="onEditorReady($event)"
+                      />
+                    </v-col>
                     <v-spacer></v-spacer>
-                    <v-text-field
-                      v-model="editedItem.description"
-                      label="description"
-                    ></v-text-field>
-                  </v-col>
+                  </v-container>
                 </v-row>
-              </v-container>
-            </v-card-text>
-            <v-card-actions>
-              <v-spacer></v-spacer>
-              <v-btn color="blue darken-1" text @click="close"> Cancel </v-btn>
-              <v-btn color="blue darken-1" text @click="createLicense">
-                Save
-              </v-btn>
-            </v-card-actions>
-          </v-card>
-        </v-dialog>
-        <v-dialog v-model="dialogUpdate" max-width="600px">
-          <v-card>
-            <v-card-title>
-              <span class="text-h5">{{ formTitle }}</span>
-            </v-card-title>
-            <v-card-text>
-              <v-container>
+              </v-card-text>
+              <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn color="blue darken-1" text @click="close">
+                  Cancel
+                </v-btn>
+                <v-btn color="blue darken-1" text @click="createLicense">
+                  Save
+                </v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
+          <v-dialog v-model="dialogUpdate" max-width="800px">
+            <v-card>
+              <v-card-title>
+                <span class="text-h5">{{ formTitle }}</span>
+              </v-card-title>
+              <v-card-text>
                 <v-row justify="center">
-                  <v-col cols="12">
-                    <v-text-field
-                      v-model="editedItem.name"
-                      label="license name"
-                    ></v-text-field>
-                  </v-col>
-                  <v-col cols="12">
-                    <v-text-field
-                      v-model="editedItem.description"
-                      label="description"
-                    ></v-text-field>
-                  </v-col>
+                  <v-container>
+                    <v-col cols="12">
+                      <v-text-field
+                        v-model="editedItem.name"
+                        label="license name"
+                      ></v-text-field>
+                    </v-col>
+                  </v-container>
+                  <v-container>
+                    <v-col cols="12">
+                      <v-spacer></v-spacer>
+                      <h4 class="white--text">description</h4>
+                      <quill-editor
+                        id="app"
+                        ref="quillEditor"
+                        v-model="editedItem.description"
+                        class="editor"
+                        :options="editorOption"
+                        @blur="onEditorBlur($event)"
+                        @focus="onEditorFocus($event)"
+                        @ready="onEditorReady($event)"
+                      />
+                    </v-col>
+                    <v-spacer></v-spacer>
+                  </v-container>
                 </v-row>
-              </v-container>
-            </v-card-text>
-            <v-card-actions>
-              <v-spacer></v-spacer>
-              <v-btn color="blue darken-1" text @click="closeUpdate">
-                Cancel
-              </v-btn>
-              <v-btn
-                color="blue darken-1"
-                text
-                @click="updateLicense(editedItem.id)"
+              </v-card-text>
+              <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn color="blue darken-1" text @click="closeUpdate">
+                  Cancel
+                </v-btn>
+                <v-btn
+                  color="blue darken-1"
+                  text
+                  @click="updateLicense(editedItem.id)"
+                >
+                  Save
+                </v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
+          <v-dialog v-model="dialogDelete" max-width="600px">
+            <v-card>
+              <v-card-title class="text-h5"
+                >Are you sure you want to delete this item?</v-card-title
               >
-                Save
-              </v-btn>
-            </v-card-actions>
-          </v-card>
-        </v-dialog>
-        <v-dialog v-model="dialogDelete" max-width="600px">
-          <v-card>
-            <v-card-title class="text-h5"
-              >Are you sure you want to delete this item?</v-card-title
-            >
-            <v-card-actions>
-              <v-spacer></v-spacer>
-              <v-btn color="blue darken-1" text @click="closeDelete"
-                >Cancel</v-btn
-              >
-              <v-btn
-                color="blue darken-1"
-                text
-                @click="deleteLicense(editedItem.id)"
-                >OK</v-btn
-              >
-              <v-spacer></v-spacer>
-            </v-card-actions>
-          </v-card>
-        </v-dialog>
-      </v-toolbar>
-    </template>
-    <template #[`item.actions`]="{ item }">
-      <v-icon small class="mr-2" @click="editItem(item)"> mdi-pencil </v-icon>
-      <v-icon small @click="deleteItem(item)"> mdi-delete </v-icon>
-    </template>
-    <template #no-data>
-      <v-btn color="primary" @click="getLicenses"> Reset </v-btn>
-    </template>
-  </v-data-table>
+              <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn color="blue darken-1" text @click="closeDelete"
+                  >Cancel</v-btn
+                >
+                <v-btn
+                  color="blue darken-1"
+                  text
+                  @click="deleteLicense(editedItem.id)"
+                  >OK</v-btn
+                >
+                <v-spacer></v-spacer>
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
+        </v-toolbar>
+      </template>
+      <template #[`item.actions`]="{ item }">
+        <v-icon small class="mr-2" @click="editItem(item)"> mdi-pencil </v-icon>
+        <v-icon small @click="deleteItem(item)"> mdi-delete </v-icon>
+      </template>
+      <template #no-data>
+        <v-btn color="primary" @click="getLicenses"> Reset </v-btn>
+      </template>
+    </v-data-table>
+  </client-only>
 </template>
 <script>
+import 'quill/dist/quill.core.css'
+import 'quill/dist/quill.bubble.css'
+import 'quill/dist/quill.snow.css'
+import { quillEditor } from 'quill-vuejs'
+
 export default {
+  name: 'License',
+  components: {
+    quillEditor,
+  },
   data() {
     return {
       dialog: false,
@@ -140,11 +174,17 @@ export default {
         name: '',
         description: '',
       },
+      editorOption: {
+        theme: 'snow',
+      },
     }
   },
   computed: {
     formTitle() {
       return this.editedIndex === -1 ? 'New Item' : 'Edit Item'
+    },
+    editor() {
+      return this.$refs.quillEditor
     },
   },
 
@@ -160,6 +200,9 @@ export default {
     },
   },
 
+  mounted() {
+    console.log('this is quill instance object', this.editor)
+  },
   beforeMount() {
     this.getLicenses()
   },
@@ -233,6 +276,32 @@ export default {
         this.editedIndex = -1
       })
     },
+    onEditorBlur(quill) {
+      console.log('editor blur!', quill)
+    },
+    onEditorFocus(quill) {
+      console.log('editor focus!', quill)
+    },
+    onEditorReady(quill) {
+      console.log('editor ready!', quill)
+    },
   },
 }
 </script>
+
+<style>
+#app {
+  color: #2c3e50;
+  margin-top: 10px;
+  margin-bottom: 40px;
+}
+
+.quill-editor,
+.content {
+  background-color: white;
+}
+
+.editor {
+  height: 500px;
+}
+</style>

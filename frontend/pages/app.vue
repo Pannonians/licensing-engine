@@ -5,7 +5,7 @@
         <v-toolbar-title>App List</v-toolbar-title>
         <v-divider class="mx-4" inset vertical></v-divider>
         <v-spacer></v-spacer>
-        <v-dialog v-model="dialog" max-width="600px">
+        <v-dialog v-model="dialog" max-width="800px">
           <template #activator="{ on, attrs }">
             <v-btn color="primary" dark class="mb-2" v-bind="attrs" v-on="on">
               New
@@ -16,18 +16,12 @@
               <span class="text-h5">{{ formTitle }}</span>
             </v-card-title>
             <v-card-text>
-              <v-container>
-                <v-row justify="center">
+              <v-row justify="center">
+                <v-container>
                   <v-col cols="12">
                     <v-text-field
                       v-model="editedItem.name"
                       label="app name"
-                    ></v-text-field>
-                  </v-col>
-                  <v-col cols="12">
-                    <v-text-field
-                      v-model="editedItem.description"
-                      label="description"
                     ></v-text-field>
                   </v-col>
                   <v-col cols="12">
@@ -38,8 +32,24 @@
                       hide-details
                     ></v-checkbox>
                   </v-col>
-                </v-row>
-              </v-container>
+                </v-container>
+                <v-container>
+                  <v-col cols="12">
+                    <v-spacer></v-spacer>
+                    <h4 class="white--text">description</h4>
+                    <quill-editor
+                      id="app"
+                      ref="quillEditor"
+                      v-model="editedItem.description"
+                      class="editor"
+                      :options="editorOption"
+                      @blur="onEditorBlur($event)"
+                      @focus="onEditorFocus($event)"
+                      @ready="onEditorReady($event)"
+                    />
+                  </v-col>
+                </v-container>
+              </v-row>
             </v-card-text>
             <v-card-actions>
               <v-spacer></v-spacer>
@@ -50,24 +60,18 @@
             </v-card-actions>
           </v-card>
         </v-dialog>
-        <v-dialog v-model="dialogUpdate" max-width="600px">
+        <v-dialog v-model="dialogUpdate" max-width="800px">
           <v-card>
             <v-card-title>
               <span class="text-h5">{{ formTitle }}</span>
             </v-card-title>
             <v-card-text>
-              <v-container>
-                <v-row justify="center">
+              <v-row justify="center">
+                <v-container>
                   <v-col cols="12">
                     <v-text-field
                       v-model="editedItem.name"
                       label="app name"
-                    ></v-text-field>
-                  </v-col>
-                  <v-col cols="12">
-                    <v-text-field
-                      v-model="editedItem.description"
-                      label="description"
                     ></v-text-field>
                   </v-col>
                   <v-col cols="12">
@@ -78,8 +82,24 @@
                       hide-details
                     ></v-checkbox>
                   </v-col>
-                </v-row>
-              </v-container>
+                </v-container>
+                <v-container>
+                  <v-col cols="12">
+                    <v-spacer></v-spacer>
+                    <h4 class="white--text">description</h4>
+                    <quill-editor
+                      id="app"
+                      ref="quillEditor"
+                      v-model="editedItem.description"
+                      class="editor"
+                      :options="editorOption"
+                      @blur="onEditorBlur($event)"
+                      @focus="onEditorFocus($event)"
+                      @ready="onEditorReady($event)"
+                    />
+                  </v-col>
+                </v-container>
+              </v-row>
             </v-card-text>
             <v-card-actions>
               <v-spacer></v-spacer>
@@ -128,7 +148,15 @@
   </v-data-table>
 </template>
 <script>
+import 'quill/dist/quill.core.css'
+import 'quill/dist/quill.bubble.css'
+import 'quill/dist/quill.snow.css'
+import { quillEditor } from 'quill-vuejs'
 export default {
+  name: 'App',
+  components: {
+    quillEditor,
+  },
   data() {
     return {
       dialog: false,
@@ -158,11 +186,17 @@ export default {
         description: '',
         active: false,
       },
+      editorOption: {
+        theme: 'snow',
+      },
     }
   },
   computed: {
     formTitle() {
       return this.editedIndex === -1 ? 'New Item' : 'Edit Item'
+    },
+    editor() {
+      return this.$refs.quillEditor
     },
   },
 
@@ -173,8 +207,13 @@ export default {
     dialogDelete(val) {
       val || close()
     },
+    dialogUpdate(val) {
+      val || this.closeUpdate()
+    },
   },
-
+  mounted() {
+    console.log('this is quill instance object', this.editor)
+  },
   beforeMount() {
     this.getApps()
   },
@@ -251,6 +290,32 @@ export default {
         this.editedIndex = -1
       })
     },
+    onEditorBlur(quill) {
+      console.log('editor blur!', quill)
+    },
+    onEditorFocus(quill) {
+      console.log('editor focus!', quill)
+    },
+    onEditorReady(quill) {
+      console.log('editor ready!', quill)
+    },
   },
 }
 </script>
+
+<style>
+#app {
+  color: #2c3e50;
+  margin-top: 10px;
+  margin-bottom: 40px;
+}
+
+.quill-editor,
+.content {
+  background-color: white;
+}
+
+.editor {
+  height: 500px;
+}
+</style>
