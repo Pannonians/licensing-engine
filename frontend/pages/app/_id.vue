@@ -6,7 +6,7 @@
           <v-list-item three-line>
             <v-list-item-content>
               <div class="text-overline mb-4">App details</div>
-              <v-list-item-title class="text-h5 mb-1">
+              <v-list-item-title class="text-h5 mb-2">
                 {{ singleApp.name }}
               </v-list-item-title>
               <v-list-item-subtitle>{{
@@ -178,7 +178,7 @@
         </v-col>
         <v-col cols="12" sm="8">
           <v-sheet class="ma-2 pa-2">
-            <v-card max-width="344" outlined>
+            <v-card width="1010" outlined>
               <v-list-item three-line>
                 <v-list-item-content>
                   <div class="text-overline mb-4">Token details</div>
