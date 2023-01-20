@@ -92,16 +92,6 @@ export default {
           title: 'License',
           to: '/license',
         },
-        {
-          icon: 'mdi-access-point',
-          title: 'Token',
-          to: '/token'
-        },
-        {
-          icon: 'mdi-cog',
-          title: 'Configuration',
-          to: '/configuration'
-        },
       ],
       miniVariant: false,
       right: true,
