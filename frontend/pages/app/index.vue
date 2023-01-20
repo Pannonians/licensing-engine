@@ -140,11 +140,11 @@
     </template>
     <template #[`item.actions`]="{ item }">
       <v-row align="center" justify="center">
-        <v-icon @click="editItem(item)"> mdi-pencil </v-icon>
+        <v-icon small @click="editItem(item)"> mdi-pencil </v-icon>
         <div class="mx-2"></div>
-        <v-icon @click="deleteItem(item)"> mdi-delete </v-icon>
+        <v-icon small @click="deleteItem(item)"> mdi-delete </v-icon>
         <div class="mx-2"></div>
-        <v-icon id="appDetails" @click="showDetails(item.id)">
+        <v-icon small id="appDetails" @click="showDetails(item.id)">
           mdi-application
         </v-icon>
         <div class="mx-2"></div>
