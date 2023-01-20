@@ -32,20 +32,6 @@
                       hide-details
                     ></v-checkbox>
                   </v-col>
-                  <v-col cols="12">
-                    <v-text-field
-                      v-model="editedItem.token"
-                      label="token"
-                    ></v-text-field>
-                  </v-col>
-                  <v-col cols="12">
-                    <v-checkbox
-                      v-model="editedItem.tokenActive"
-                      label="active"
-                      color="primary"
-                      hide-details
-                    ></v-checkbox>
-                  </v-col>
                 </v-container>
                 <v-container>
                   <v-col cols="12">
@@ -91,20 +77,6 @@
                   <v-col cols="12">
                     <v-checkbox
                       v-model="editedItem.active"
-                      label="active"
-                      color="primary"
-                      hide-details
-                    ></v-checkbox>
-                  </v-col>
-                  <v-col cols="12">
-                    <v-text-field
-                      v-model="editedItem.token"
-                      label="app name"
-                    ></v-text-field>
-                  </v-col>
-                  <v-col cols="12">
-                    <v-checkbox
-                      v-model="editedItem.tokenActive"
                       label="active"
                       color="primary"
                       hide-details
@@ -170,11 +142,11 @@
       <v-row align="center" justify="center">
         <v-icon @click="editItem(item)"> mdi-pencil </v-icon>
         <div class="mx-2"></div>
-
         <v-icon @click="deleteItem(item)"> mdi-delete </v-icon>
         <div class="mx-2"></div>
-
-        <v-icon id="appDetails" @click="showDetails(item.id)"> mdi-application </v-icon>
+        <v-icon id="appDetails" @click="showDetails(item.id)">
+          mdi-application
+        </v-icon>
         <div class="mx-2"></div>
       </v-row>
     </template>
@@ -210,25 +182,18 @@ export default {
         { text: 'Active', value: 'active' },
         { text: 'Actions', value: 'actions', sortable: false },
       ],
-      
       appList: [],
-      tokenList: [],
-      appTokenList: [],
       createResponse: {},
       editedIndex: -1,
       editedItem: {
         name: '',
         description: '',
-        appActive: false,
-        token: '',
-        tokenActive: false
+        active: false,
       },
       defaultItem: {
         name: '',
         description: '',
         active: false,
-        token: '',
-        tokenActive: false
       },
       editorOption: {
         theme: 'snow',
@@ -243,7 +208,6 @@ export default {
       return this.$refs.quillEditor
     },
   },
-
   watch: {
     dialog(val) {
       val || close()
@@ -263,7 +227,7 @@ export default {
   },
   methods: {
     showDetails(id) {
-     this.$router.push( `/app/${id}`)
+      this.$router.push(`/app/${id}`)
     },
     getApps() {
       this.$axios.get('/api/app').then((response) => {
@@ -279,25 +243,6 @@ export default {
         })
         .then((response) => {
           this.appList.push(response.data)
-          this.createResponse = response.data
-        })
-      this.$axios
-        .post('/api/token', {
-          token: this.$data.editedItem.token,
-          active: this.$data.editedItem.tokenActive,
-        })
-        .then((response) => {
-          this.tokenList.push(response.data)
-          this.createResponse = response.data
-        })
-        this.$axios
-        .post('/app-tokens', {
-          appId: this.$data.editedItem.id,
-          token: this.$data.editedItem.token,
-          active: this.$data.editedItem.tokenActive,
-        })
-        .then((response) => {
-          this.selected.push(response.data)
           this.createResponse = response.data
         })
       this.close()
@@ -333,7 +278,6 @@ export default {
       this.editedItem = Object.assign({}, item)
       this.dialogDelete = true
     },
-
     close() {
       this.dialog = false
       this.$nextTick(() => {
@@ -341,7 +285,6 @@ export default {
         this.editedIndex = -1
       })
     },
-
     closeDelete() {
       this.dialogDelete = false
       this.$nextTick(() => {
