@@ -50,22 +50,12 @@ model Token {
   App           App?           @relation(fields: [appId], references: [id])
   appId         String?
   LicenseTokens LicenseToken[]
-  AppTokens     AppToken[]
 }
 
 model App {
-  id          String     @id @default(cuid())
-  name        String     @db.Char(100)
-  active      Boolean    @default(false)
-  description String     @db.Text
+  id          String  @id @default(cuid())
+  name        String  @db.Char(100)
+  active      Boolean @default(false)
+  description String  @db.Text
   tokens      Token[]
-  AppTokens   AppToken[]
-}
-
-model AppToken {
-  id      String  @id @default(cuid())
-  app     App?    @relation(fields: [appId], references: [id])
-  appId   String?
-  token   Token   @relation(fields: [tokenId], references: [id])
-  tokenId String
 }

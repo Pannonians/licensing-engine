@@ -327,15 +327,16 @@ export default {
       })
     },
     getTokens() {
-      this.$axios.get('/api/token').then((response) => {
+      this.$axios.get('/api/app-token/' + this.$route.params.id ).then((response) => {
         this.tokenList = response.data
       })
     },
     createToken() {
       this.$axios
-        .post('/api/token', {
+        .post('/api/app-token', {
           token: this.$data.editedItem.token,
           active: this.$data.editedItem.active,
+          appId: this.$route.params.id,
         })
         .then((response) => {
           this.tokenList.push(response.data)
