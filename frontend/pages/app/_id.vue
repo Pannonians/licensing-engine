@@ -225,13 +225,12 @@
                     class="elevation-1"
                     show-select
                   ></v-data-table>
-
                   <v-card-actions>
                     <v-spacer></v-spacer>
                     <v-btn color="blue darken-1" text @click="close">
                       Cancel
                     </v-btn>
-                    <v-btn color="blue darken-1" text @click="Save">
+                    <v-btn color="blue darken-1" text @click="saveLicenseList(singleToken.id)">
                       Save
                     </v-btn>
                   </v-card-actions>
@@ -246,10 +245,13 @@
 </template>
 
 <script>
+
+import {uuid} from "vue-uuid"
 export default {
   name: 'AppDetails',
   data() {
     return {
+      uuid: uuid.v4(),
       model: 'rounded-xl',
       singleSelect: false,
       dialogUpdate: false,
@@ -281,12 +283,12 @@ export default {
       selected: [],
       editedIndex: -1,
       editedItem: {
-        token: '',
+        token: uuid.v4(),
         id: '',
         active: false,
       },
       defaultItem: {
-        token: '',
+        token: uuid.v4(),
         id: '',
         active: false,
       },
@@ -315,6 +317,22 @@ export default {
   },
 
   methods: {
+
+    saveLicenseList(id) {
+      if (this.tokenList)
+      this.$axios.post('/api/token-license/' + id, {tokenId: this.singleToken.id, selectedLicenses: this.selected}).then((response) => {
+        this.createResponse = response.data
+      })
+      else alert('there are no created tokens for this app')
+
+    },
+
+    getSavedLicenses(id) {
+      this.$axios.get('/api/token-license/' + id).then((response) => {
+        this.selected = response.data
+      })
+    },
+
     showDetails(id) {
       this.$axios.get('/api/token/' + id).then((response) => {
         this.singleToken = response.data
