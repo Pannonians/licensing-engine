@@ -6,12 +6,14 @@ const tokenValidation = require("../validations/tokenValidation");
 const appValidation = require("../validations/appValidation");
 const licenseRetrieve = require("../controllers/licenseRetrieve");
 const clientParser = require("../middleware/clientParser");
+const { domainLicense } = require("../prisma");
 
 const license = prisma.license;
 const domain = prisma.domain;
 const token = prisma.token;
 const app = prisma.app;
-const licenseToken = prisma.licenseToken
+const licenseToken = prisma.licenseToken;
+const licenseDomain = prisma.domainLicense;
 
 router.use(
   "/license",
@@ -85,6 +87,15 @@ router.use(
   })
 );
 
+router.use(
+  "/domain-license",
+  require("../middleware/domainLicenseRelations")(licenseDomain, {
+    middleware: {
+      create: [],
+      readMany: [],
+    },
+  })
+);
 router.use("/get-licenses", clientParser, licenseRetrieve);
 
 module.exports = router;
