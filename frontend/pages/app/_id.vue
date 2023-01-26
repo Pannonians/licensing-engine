@@ -204,7 +204,7 @@
                         </tr>
                       </thead>
                       <tbody>
-                        <tr v-for="item in selected" :key="item.name">
+                        <tr v-for="item in savedLicenses" :key="item.name">
                           <td>{{ item.name }}</td>
                           <td>{{ item.description }}</td>
                         </tr>
@@ -216,21 +216,35 @@
               <v-col cols="12" sm="6">
                 <v-card class="pa-2" outlined tile>
                   <v-data-table
-                    v-model="selected"
+                    v-model="selectedRows"
                     :headers="headers1"
                     :items="licenseList"
-                    :single-select="singleSelect"
                     item-key="name"
                     sort-by="name"
                     class="elevation-1"
-                    show-select
-                  ></v-data-table>
+                  >
+                    <template #item="{ item }">
+                      <tr
+                        :class="
+                          selectedRows.indexOf(item.id) > -1 ? 'grey' : ''
+                        "
+                        @click="connectTokenLicense(item.id)"
+                      >
+                        <td>{{ item.name }}</td>
+                        <td>{{ item.description }}</td>
+                      </tr>
+                    </template>
+                  </v-data-table>
                   <v-card-actions>
                     <v-spacer></v-spacer>
                     <v-btn color="blue darken-1" text @click="close">
                       Cancel
                     </v-btn>
-                    <v-btn color="blue darken-1" text @click="saveLicenseList(singleToken.id)">
+                    <v-btn
+                      color="blue darken-1"
+                      text
+                      @click="connectTokenLicense(singleToken.id)"
+                    >
                       Save
                     </v-btn>
                   </v-card-actions>
@@ -245,8 +259,7 @@
 </template>
 
 <script>
-
-import {uuid} from "vue-uuid"
+import { uuid } from 'vue-uuid'
 export default {
   name: 'AppDetails',
   data() {
@@ -254,6 +267,7 @@ export default {
       uuid: uuid.v4(),
       model: 'rounded-xl',
       singleSelect: false,
+      dialog: false,
       dialogUpdate: false,
       dialogDelete: false,
       headers: [
@@ -277,10 +291,11 @@ export default {
       ],
       tokenList: [],
       licenseList: [],
-      createResponse: {},
+      createResponse: [],
       singleApp: {},
       singleToken: {},
-      selected: [],
+      selectedRows: [],
+      savedLicenses: [],
       editedIndex: -1,
       editedItem: {
         token: uuid.v4(),
@@ -298,6 +313,9 @@ export default {
   computed: {
     formTitle() {
       return this.editedIndex === -1 ? 'New Item' : 'Edit Item'
+    },
+    updateLicenseList() {
+      return [this.savedLicenses]
     },
   },
 
@@ -317,26 +335,52 @@ export default {
   },
 
   methods: {
-
-    saveLicenseList(id) {
-      if (this.tokenList)
-      this.$axios.post('/api/token-license/' + id, {tokenId: this.singleToken.id, selectedLicenses: this.selected}).then((response) => {
-        this.createResponse = response.data
-      })
-      else alert('there are no created tokens for this app')
-
+    async createLicenseToken(id) {
+      if (this.savedLicenses.find((item) => item.id === id))
+        alert('this license is already in use')
+      else
+        await this.$axios
+          .post('/api/token-license', {
+            tokenId: this.singleToken.id,
+            licenseId: id,
+          })
+          .then((response) => {
+            this.createResponse = response.data
+            this.$axios.get('/api/license/' + id).then((response) => {
+              this.savedLicenses.push(response.data)
+            })
+          })
     },
 
-    getSavedLicenses(id) {
-      this.$axios.get('/api/token-license/' + id).then((response) => {
-        this.selected = response.data
+    connectTokenLicense(id) {
+      if (this.selectedRows.includes(id)) {
+        this.selectedRows = this.selectedRows.filter(
+          (selectedId) => selectedId !== id
+        )
+      } else this.selectedRows.push(id)
+      this.createLicenseToken(id)
+    },
+
+    async getSavedLicenses(id) {
+      this.savedLicenses = []
+      await this.$axios.get('/api/license/' + id).then((response) => {
+        this.savedLicenses.push(response.data)
       })
     },
 
-    showDetails(id) {
-      this.$axios.get('/api/token/' + id).then((response) => {
+    async showDetails(id) {
+      await this.$axios.get('/api/token/' + id).then((response) => {
         this.singleToken = response.data
       })
+      await this.$axios
+        .get('api/token-license', { tokenId: this.singleToken.id })
+        .then((response) => {
+          this.createResponse = response.data.filter(
+            (item) => item.tokenId === this.singleToken.id
+          )
+        })
+
+      this.createResponse.forEach((i) => this.getSavedLicenses(i.licenseId))
     },
 
     getLicenses() {
@@ -345,9 +389,11 @@ export default {
       })
     },
     getTokens() {
-      this.$axios.get('/api/app-token/' + this.$route.params.id ).then((response) => {
-        this.tokenList = response.data
-      })
+      this.$axios
+        .get('/api/app-token/' + this.$route.params.id)
+        .then((response) => {
+          this.tokenList = response.data
+        })
     },
     createToken() {
       this.$axios
