@@ -27,6 +27,8 @@ model Domain {
   name           String          @db.Char(100)
   active         Boolean         @default(false)
   DomainLicenses DomainLicense[]
+
+  @@unique([name])
 }
 
 model DomainLicense {
@@ -35,6 +37,8 @@ model DomainLicense {
   license   License @relation(fields: [licenseId], references: [id])
   domainId  String
   licenseId String
+
+  @@unique([licenseId, domainId])
 }
 
 model LicenseToken {

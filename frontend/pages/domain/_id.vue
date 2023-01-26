@@ -30,7 +30,7 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr v-for="item in selected" :key="item.name">
+                  <tr v-for="item in savedLicenses" :key="item.name">
                     <td>{{ item.name }}</td>
                     <td>{{ item.description }}</td>
                   </tr>
@@ -42,20 +42,24 @@
         <v-col cols="12" sm="6">
           <v-card class="pa-2" outlined tile>
             <v-data-table
-              v-model="selected"
-              :headers="headers"
+              v-model="selectedRows"
+              :headers="headers1"
               :items="licenseList"
               :single-select="singleSelect"
               item-key="name"
               sort-by="name"
               class="elevation-1"
-              show-select
-            ></v-data-table>
-            <v-card-actions>
-              <v-spacer></v-spacer>
-              <v-btn color="blue darken-1" text @click="close"> Cancel </v-btn>
-              <v-btn color="blue darken-1" text @click="Save"> Save </v-btn>
-            </v-card-actions>
+            >
+              <template #item="{ item }">
+                <tr
+                  :class="selectedRows.indexOf(item.id) > -1 ? 'grey' : ''"
+                  @click="connectDomainLicense(item.id)"
+                >
+                  <td>{{ item.name }}</td>
+                  <td>{{ item.description }}</td>
+                </tr>
+              </template>
+            </v-data-table>
           </v-card>
         </v-col>
       </v-row>
@@ -69,7 +73,7 @@ export default {
     return {
       model: 'rounded-xl',
       singleSelect: false,
-      headers: [
+      headers1: [
         {
           text: 'Registered Licenses',
           align: 'start',
@@ -81,26 +85,74 @@ export default {
       domainList: [],
       licenseList: [],
       singleDomain: {},
-      selected: [],
+      selectedRows: [],
+      savedLicenses: [],
     }
+  },
+  computed: {
+    updateLicenseList() {
+      return [this.savedLicenses]
+    },
   },
 
   beforeMount() {
     this.getLicenses()
-    this.getSingleDomain()
+    this.showDetails()
   },
 
   methods: {
-    getLicenses() {
-      this.$axios.get('/api/license').then((response) => {
-        this.licenseList = response.data
+    async createLicenseDomain(id) {
+      if (this.savedLicenses.find((item) => item.id === id))
+        alert('this license is already in use')
+      else
+        await this.$axios
+          .post('/api/domain-license', {
+            domainId: this.$route.params.id,
+            licenseId: id,
+          })
+          .then((response) => {
+            this.createResponse = response.data
+            this.$axios.get('/api/license/' + id).then((response) => {
+              this.savedLicenses.push(response.data)
+            })
+          })
+    },
+
+    connectDomainLicense(id) {
+      if (this.selectedRows.includes(id)) {
+        this.selectedRows = this.selectedRows.filter(
+          (selectedId) => selectedId !== id
+        )
+      } else this.selectedRows.push(id)
+      this.createLicenseDomain(id)
+    },
+
+    async getSavedLicenses(id) {
+      this.savedLicenses = []
+      await this.$axios.get('/api/license/' + id).then((response) => {
+        this.savedLicenses.push(response.data)
       })
     },
 
-    getSingleDomain() {
+    async showDetails() {
       const { id } = this.$route.params
-      this.$axios.get('/api/domain/' + id).then((response) => {
+      await this.$axios.get('/api/domain/' + id).then((response) => {
         this.singleDomain = response.data
+      })
+      await this.$axios
+        .get('api/domain-license', { domainId: this.singleDomain.id })
+        .then((response) => {
+          this.createResponse = response.data.filter(
+            (item) => item.domainId === this.singleDomain.id
+          )
+        })
+
+      this.createResponse.forEach((i) => this.getSavedLicenses(i.licenseId))
+    },
+
+    getLicenses() {
+      this.$axios.get('/api/license').then((response) => {
+        this.licenseList = response.data
       })
     },
   },
