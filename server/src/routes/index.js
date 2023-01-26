@@ -11,6 +11,7 @@ const license = prisma.license;
 const domain = prisma.domain;
 const token = prisma.token;
 const app = prisma.app;
+const licenseToken = prisma.licenseToken
 
 router.use(
   "/license",
@@ -69,6 +70,16 @@ router.use(
   require("../middleware/tokenRelations")(token, {
     middleware: {
       create: [tokenValidation],
+      readMany: [],
+    },
+  })
+);
+
+router.use(
+  "/token-license",
+  require("../middleware/licenceRelations")(licenseToken, {
+    middleware: {
+      create: [],
       readMany: [],
     },
   })

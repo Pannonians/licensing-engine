@@ -18,6 +18,8 @@ model License {
   description    String          @db.Text
   DomainLicenses DomainLicense[]
   LicenseTokens  LicenseToken[]
+
+  @@unique([name])
 }
 
 model Domain {
@@ -41,6 +43,8 @@ model LicenseToken {
   token     Token   @relation(fields: [tokenId], references: [id])
   licenseId String
   tokenId   String
+
+  @@unique([licenseId, tokenId])
 }
 
 model Token {
