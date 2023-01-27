@@ -359,9 +359,16 @@ export default {
         this.savedLicenses.push(response.data)
       })
     },
-    removeLicense(id) {
-      let tableId = ''
 
+    async removeLicense(id) {
+      await this.$axios
+        .get('api/token-license', { tokenId: this.singleToken.id })
+        .then((response) => {
+          this.licenseTokenList = response.data.filter(
+            (item) => item.tokenId === this.singleToken.id
+          )
+        })
+      let tableId = ''
       this.licenseTokenList.filter((item) => {
         if (item.tokenId === this.singleToken.id && item.licenseId === id) {
           tableId = item.id

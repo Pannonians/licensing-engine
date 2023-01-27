@@ -138,7 +138,15 @@ export default {
         this.savedLicenses.push(response.data)
       })
     },
-    removeLicense(id) {
+    async removeLicense(id) {
+      await this.$axios
+        .get('api/domain-license', { domainId: this.singleDomain.id })
+        .then((response) => {
+          this.licenseTokenList = response.data.filter(
+            (item) => item.domainId === this.singleDomain.id
+          )
+        })
+
       let tableId = ''
 
       this.licenseTokenList.filter((item) => {
