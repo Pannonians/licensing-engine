@@ -30,7 +30,11 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr v-for="item in savedLicenses" :key="item.name">
+                  <tr
+                    v-for="item in savedLicenses"
+                    :key="item.name"
+                    @click="removeLicense(item.id)"
+                  >
                     <td>{{ item.name }}</td>
                     <td>{{ item.description }}</td>
                   </tr>
@@ -87,6 +91,7 @@ export default {
       singleDomain: {},
       selectedRows: [],
       savedLicenses: [],
+      licenseTokenList: [],
     }
   },
   computed: {
@@ -133,7 +138,27 @@ export default {
         this.savedLicenses.push(response.data)
       })
     },
+    removeLicense(id) {
+      let tableId = ''
 
+      this.licenseTokenList.filter((item) => {
+        if (item.domainId === this.singleDomain.id && item.licenseId === id) {
+          tableId = item.id
+        }
+        return tableId
+      })
+      this.$axios
+        .delete('/api/domain-license/' + tableId, {
+          body: {
+            id: tableId,
+          },
+        })
+        .then((response) => {
+          const index = this.savedLicenses.findIndex((list) => list.id === id)
+          if (~index) this.savedLicenses.splice(index, 1)
+          this.createResponse = response.data
+        })
+    },
     async showDetails() {
       const { id } = this.$route.params
       await this.$axios.get('/api/domain/' + id).then((response) => {
@@ -142,12 +167,12 @@ export default {
       await this.$axios
         .get('api/domain-license', { domainId: this.singleDomain.id })
         .then((response) => {
-          this.createResponse = response.data.filter(
+          this.licenseTokenList = response.data.filter(
             (item) => item.domainId === this.singleDomain.id
           )
         })
 
-      this.createResponse.forEach((i) => this.getSavedLicenses(i.licenseId))
+      this.licenseTokenList.forEach((i) => this.getSavedLicenses(i.licenseId))
     },
 
     getLicenses() {
