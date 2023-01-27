@@ -214,8 +214,9 @@ export default {
         const index = this.domainList.findIndex((list) => list.id === id)
         if (~index) this.domainList.splice(index, 1)
         this.createResponse = response.data
+        this.closeDelete()
+        this.$toast.show('Domain deleted')
       })
-      this.closeDelete()
     },
 
     updateDomain(id) {

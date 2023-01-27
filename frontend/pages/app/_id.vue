@@ -433,9 +433,10 @@ export default {
         // if (~index) this.tokenList.splice(index, 1)
         this.tokenList = this.tokenList.filter((token) => token.id !== id)
         this.createResponse = response.data
+        this.closeDelete()
+        this.singleToken = null
+        this.$toast.show('Token deleted')
       })
-      this.closeDelete()
-      this.singleToken = null
     },
     updateToken(id) {
       this.$axios

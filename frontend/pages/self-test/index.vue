@@ -1,6 +1,6 @@
 <template>
   <section>
-    <div>Self test here, testing with default url</div>
+    <div class="text-white">Self test here, testing with default url. If blank, will use this domain.</div>
     <div class="d-flex align-center">
       <v-text-field
         v-model="token"
@@ -40,3 +40,9 @@ export default {
   },
 }
 </script>
+
+<style>
+.text-white {
+  color: white;
+}
+</style>

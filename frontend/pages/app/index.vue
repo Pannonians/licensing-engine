@@ -247,8 +247,9 @@ export default {
         const index = this.appList.findIndex((list) => list.id === id)
         if (~index) this.appList.splice(index, 1)
         this.createResponse = response.data
+        this.closeDelete()
+        this.$toast.show('App deleted, and all tokens if it had any')
       })
-      this.closeDelete()
     },
     updateApp(id) {
       this.$axios
