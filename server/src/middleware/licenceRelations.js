@@ -20,13 +20,27 @@ module.exports = (LicenseToken, options) => {
   const create = async (req, res, next) => {
     try {
       const newItem = await LicenseToken.create({
-          data: {
-              tokenId: req.body.tokenId,
-              licenseId: req.body.licenseId
+        data: {
+          tokenId: req.body.tokenId,
+          licenseId: req.body.licenseId
         },
       });
 
       res.status(200).json(newItem);
+    } catch (error) {
+      res.status(400);
+      next(error);
+    }
+  };
+
+  const remove = async (req, res, next) => {
+    try {
+      const { id } = req.params;
+      const removeItem = await LicenseToken.delete({
+        where: { id: id },
+      });
+
+      res.status(200).json(removeItem);
     } catch (error) {
       res.status(400);
       next(error);
@@ -42,10 +56,12 @@ module.exports = (LicenseToken, options) => {
   const actions = {
     create: [...options.middleware.create, create],
     readMany: [...options.middleware.readMany, readMany],
+    remove: [...options.middleware.remove, remove],
   };
 
   router.post("/", ...actions.create);
   router.get("/", ...actions.readMany);
+  router.delete("/:id", ...actions.remove);
 
   return router;
 };

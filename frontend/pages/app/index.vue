@@ -178,7 +178,6 @@ export default {
           sortable: false,
           value: 'name',
         },
-        { text: 'Description', value: 'description' },
         { text: 'Active', value: 'active' },
         { text: 'Actions', value: 'actions', sortable: false },
       ],
