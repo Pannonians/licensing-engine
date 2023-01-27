@@ -1,3 +1,4 @@
+<!-- eslint-disable vue/no-v-html -->
 <template>
   <v-container class="bg-surface-variant">
     <v-container>
@@ -6,15 +7,18 @@
           <v-list-item three-line>
             <v-list-item-content>
               <div class="text-overline mb-4">App details</div>
-              <v-list-item-title class="text-h5 mb-2">
-                {{ singleApp.name }}
+              <v-list-item-title class="text-h5 mb-2 d-flex align-center">
+                <div>{{ singleApp.name }}</div>
+                <active-indicator
+                  :model="singleApp"
+                  resource="app"
+                  :callback="bootstrap"
+                />
               </v-list-item-title>
-              <v-list-item-subtitle>{{
-                singleApp.description
-              }}</v-list-item-subtitle>
-              <v-list-item-subtitle>{{
-                singleApp.active
-              }}</v-list-item-subtitle>
+              <hr class="my-5" />
+              <prose>
+                <div v-html="singleApp.description" />
+              </prose>
             </v-list-item-content>
           </v-list-item>
         </v-card>
@@ -57,6 +61,7 @@
                               <v-col cols="12">
                                 <v-text-field
                                   v-model="editedItem.token"
+                                  disabled
                                   label="token name"
                                 ></v-text-field>
                               </v-col>
@@ -97,6 +102,7 @@
                               <v-col cols="12">
                                 <v-text-field
                                   v-model="editedItem.token"
+                                  disabled
                                   label="domain name"
                                 ></v-text-field>
                               </v-col>
@@ -176,12 +182,17 @@
             </v-card>
           </v-sheet>
         </v-col>
-        <v-col cols="12" sm="8">
+        <v-col v-if="singleToken" cols="12" sm="8">
           <v-sheet class="ma-2 pa-2">
             <v-card width="1010" outlined>
               <v-list-item three-line>
                 <v-list-item-content>
-                  <div class="text-overline mb-4">Token details</div>
+                  <div class="d-flex justify-space-between align-center">
+                    <div class="text-overline mb-4">Token details</div>
+                    <div style="cursor: pointer" @click="singleToken = null">
+                      X
+                    </div>
+                  </div>
                   <v-list-item-title class="text-h5 mb-1">
                     {{ singleToken.token }}
                   </v-list-item-title>
@@ -200,7 +211,6 @@
                       <thead>
                         <tr>
                           <th class="text-left">License</th>
-                          <th class="text-left">Description</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -210,7 +220,6 @@
                           @click="removeLicense(item.id)"
                         >
                           <td>{{ item.name }}</td>
-                          <td>{{ item.description }}</td>
                         </tr>
                       </tbody>
                     </template>
@@ -222,7 +231,7 @@
                   <v-data-table
                     v-model="selectedRows"
                     :headers="headers1"
-                    :items="licenseList"
+                    :items="nonActiveLicenses"
                     item-key="name"
                     sort-by="name"
                     class="elevation-1"
@@ -235,7 +244,6 @@
                         @click="connectTokenLicense(item.id)"
                       >
                         <td>{{ item.name }}</td>
-                        <td>{{ item.description }}</td>
                       </tr>
                     </template>
                   </v-data-table>
@@ -278,14 +286,13 @@ export default {
           value: 'name',
           sortable: false,
         },
-        { text: 'description', value: 'description' },
       ],
       tokenList: [],
       licenseList: [],
       createResponse: [],
       licenseTokenList: [],
       singleApp: {},
-      singleToken: {},
+      singleToken: null,
       selectedRows: [],
       savedLicenses: [],
       editedIndex: -1,
@@ -309,6 +316,11 @@ export default {
     updateLicenseList() {
       return [this.savedLicenses]
     },
+    nonActiveLicenses() {
+      return this.licenseList.filter(
+        (license) => !this.savedLicenses.map((l) => l.id).includes(license.id)
+      )
+    },
   },
 
   watch: {
@@ -321,12 +333,18 @@ export default {
   },
 
   beforeMount() {
-    this.getTokens()
-    this.getSingleApp()
-    this.getLicenses()
+    this.bootstrap()
   },
 
   methods: {
+    bootstrap() {
+      this.getTokens()
+      this.getSingleApp()
+      this.getLicenses()
+      if (this.singleToken) {
+        this.showDetails(this.singleToken.id, false)
+      }
+    },
     async createLicenseToken(id) {
       if (this.savedLicenses.find((item) => item.id === id))
         alert('this license is already in use')
@@ -359,40 +377,29 @@ export default {
         this.savedLicenses.push(response.data)
       })
     },
-    removeLicense(id) {
-      let tableId = ''
-
-      this.licenseTokenList.filter((item) => {
-        if (item.tokenId === this.singleToken.id && item.licenseId === id) {
-          tableId = item.id
-        }
-        return tableId
-      })
+    removeLicense(licenseId) {
       this.$axios
-        .delete('/api/token-license/' + tableId, {
-          body: {
-            id: tableId,
-          },
-        })
+        .delete('/api/token-license/' + this.singleToken.id + '/' + licenseId)
         .then((response) => {
-          const index = this.savedLicenses.findIndex((list) => list.id === id)
-          if (~index) this.savedLicenses.splice(index, 1)
+          this.savedLicenses = this.savedLicenses.filter(
+            (license) => license.id !== licenseId
+          )
           this.createResponse = response.data
         })
     },
-    async showDetails(id) {
+    async showDetails(id, checkRefresh = true) {
+      if (checkRefresh && this.singleToken && this.singleToken.id === id) {
+        this.singleToken = null
+        return
+      }
       await this.$axios.get('/api/token/' + id).then((response) => {
         this.singleToken = response.data
       })
       await this.$axios
-        .get('api/token-license', { tokenId: this.singleToken.id })
+        .get('api/token-license/' + this.singleToken.id)
         .then((response) => {
-          this.licenseTokenList = response.data.filter(
-            (item) => item.tokenId === this.singleToken.id
-          )
+          this.savedLicenses = response.data
         })
-
-      this.licenseTokenList.forEach((i) => this.getSavedLicenses(i.licenseId))
     },
 
     getLicenses() {
@@ -422,11 +429,13 @@ export default {
     },
     deleteToken(id) {
       this.$axios.delete('/api/token/' + id).then((response) => {
-        const index = this.tokenList.findIndex((list) => list.id === id)
-        if (~index) this.tokenList.splice(index, 1)
+        // const index = this.tokenList.findIndex((list) => list.id === id)
+        // if (~index) this.tokenList.splice(index, 1)
+        this.tokenList = this.tokenList.filter((token) => token.id !== id)
         this.createResponse = response.data
       })
       this.closeDelete()
+      this.singleToken = null
     },
     updateToken(id) {
       this.$axios

@@ -1,36 +1,48 @@
 const prisma = require("../prisma");
 const license = prisma.license;
 
-const licenseRetrieve = () => async (req, res, next) => {
+const licenseRetrieve = async (req, res) => {
   try {
-    const reqToken = req.token;
-    const pickUpLicensesToken = await license.findUnique({
-      where: {
-        tokens: { token: reqToken },
-      },
-      select: {
-        name: true,
-      },
-    }).map((item) => item.name);
-    if (!pickUpLicensesToken) {
-      const reqDomain = req.domain;
-      const pickUpLicensesDomain = await license.findUnique({
+    if (req?.token?.id) {
+      const pickUpLicensesToken = await license.findMany({
         where: {
-          domain: { name: reqDomain },
-        },
-        select: {
-          name: true,
-        },
-      }).map((item) => item.name);
-      if (!pickUpLicensesDomain) {
-        throw new Error(
-          `no licenses were found for ${reqToken} token or ${reqDomain} domain`
-        );
-      }
-      res.status(200).json(pickUpLicensesDomain);
+          LicenseTokens: {
+            some: {
+              tokenId: req.token.id,
+              token: {
+                active: true
+              }
+            }
+          }
+        }
+      })
+
+      const licenseNames = pickUpLicensesToken.map((item) => item.name);
+      res.status(200).json(licenseNames);
+      return
     }
-    res.status(200).json(pickUpLicensesToken);
-  } catch {
+    
+    if (req?.domain?.id) {
+      const pickUpLicensesDomain = await license.findMany({
+        where: {
+          DomainLicenses: {
+            some: {
+              domainId: req.domain.id,
+              domain: {
+                active: true
+              }
+            }
+          }
+        }
+      })
+      const pickUpLicensesDomainMapped = pickUpLicensesDomain.map((item) => item.name);
+      res.status(200).json(pickUpLicensesDomainMapped);
+      return
+    }
+    throw new Error(
+      `no licenses were found for ${reqToken} token or ${reqDomain} domain`
+    );
+  } catch (e) {
     res.status(403);
   }
 };

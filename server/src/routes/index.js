@@ -6,18 +6,13 @@ const tokenValidation = require("../validations/tokenValidation");
 const appValidation = require("../validations/appValidation");
 const licenseRetrieve = require("../controllers/licenseRetrieve");
 const clientParser = require("../middleware/clientParser");
-const { domainLicense } = require("../prisma");
-
-const license = prisma.license;
-const domain = prisma.domain;
-const token = prisma.token;
-const app = prisma.app;
-const licenseToken = prisma.licenseToken;
-const licenseDomain = prisma.domainLicense;
+const tokenRelations = require("../controllers/tokenRelations");
+const licenceRelations = require("../controllers/licenceRelations");
+const domainLicenseRelations = require("../controllers/domainLicenseRelations");
 
 router.use(
   "/license",
-  require("../rdbms/crud")(license, {
+  require("../rdbms/crud")(prisma.license, {
     middleware: {
       create: [licenseValidation],
       readMany: [],
@@ -30,7 +25,7 @@ router.use(
 
 router.use(
   "/domain",
-  require("../rdbms/crud")(domain, {
+  require("../rdbms/crud")(prisma.domain, {
     middleware: {
       create: [domainValidation],
       readMany: [],
@@ -43,7 +38,7 @@ router.use(
 
 router.use(
   "/token",
-  require("../rdbms/crud")(token, {
+  require("../rdbms/crud")(prisma.token, {
     middleware: {
       create: [tokenValidation],
       readMany: [],
@@ -56,7 +51,7 @@ router.use(
 
 router.use(
   "/app",
-  require("../rdbms/crud")(app, {
+  require("../rdbms/crud")(prisma.app, {
     middleware: {
       create: [appValidation],
       readMany: [],
@@ -69,34 +64,17 @@ router.use(
 
 router.use(
   "/app-token",
-  require("../middleware/tokenRelations")(token, {
-    middleware: {
-      create: [tokenValidation],
-      readMany: [],
-    },
-  })
+  tokenRelations
 );
 
 router.use(
   "/token-license",
-  require("../middleware/licenceRelations")(licenseToken, {
-    middleware: {
-      create: [],
-      readMany: [],
-      remove: [],
-    },
-  })
+  licenceRelations
 );
 
 router.use(
   "/domain-license",
-  require("../middleware/domainLicenseRelations")(licenseDomain, {
-    middleware: {
-      create: [],
-      readMany: [],
-      remove: [],
-    },
-  })
+  domainLicenseRelations
 );
 router.use("/get-licenses", clientParser, licenseRetrieve);
 

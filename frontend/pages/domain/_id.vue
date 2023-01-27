@@ -6,12 +6,14 @@
           <v-list-item three-line>
             <v-list-item-content>
               <div class="text-overline mb-4">Domain details</div>
-              <v-list-item-title class="text-h5 mb-1">
-                {{ singleDomain.name }}
+              <v-list-item-title class="text-h5 mb-1 d-flex">
+                <div>{{ singleDomain.name }}</div>
+                <active-indicator
+                  :model="singleDomain"
+                  resource="domain"
+                  :callback="bootstrap"
+                />
               </v-list-item-title>
-              <v-list-item-subtitle>{{
-                singleDomain.active
-              }}</v-list-item-subtitle>
             </v-list-item-content>
           </v-list-item>
         </v-card>
@@ -26,7 +28,6 @@
                 <thead>
                   <tr>
                     <th class="text-left">License</th>
-                    <th class="text-left">Description</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -36,7 +37,6 @@
                     @click="removeLicense(item.id)"
                   >
                     <td>{{ item.name }}</td>
-                    <td>{{ item.description }}</td>
                   </tr>
                 </tbody>
               </template>
@@ -48,7 +48,7 @@
             <v-data-table
               v-model="selectedRows"
               :headers="headers1"
-              :items="licenseList"
+              :items="nonActiveLicenses"
               :single-select="singleSelect"
               item-key="name"
               sort-by="name"
@@ -60,7 +60,6 @@
                   @click="connectDomainLicense(item.id)"
                 >
                   <td>{{ item.name }}</td>
-                  <td>{{ item.description }}</td>
                 </tr>
               </template>
             </v-data-table>
@@ -76,7 +75,7 @@ export default {
   data() {
     return {
       model: 'rounded-xl',
-      singleSelect: false,
+      singleSelect: true,
       headers1: [
         {
           text: 'Registered Licenses',
@@ -84,7 +83,6 @@ export default {
           value: 'name',
           sortable: false,
         },
-        { text: 'description', value: 'description' },
       ],
       domainList: [],
       licenseList: [],
@@ -98,14 +96,22 @@ export default {
     updateLicenseList() {
       return [this.savedLicenses]
     },
+    nonActiveLicenses() {
+      return this.licenseList.filter(
+        (license) => !this.savedLicenses.map((l) => l.id).includes(license.id)
+      )
+    },
   },
 
   beforeMount() {
-    this.getLicenses()
-    this.showDetails()
+    this.bootstrap()
   },
 
   methods: {
+    bootstrap() {
+      this.getLicenses()
+      this.showDetails()
+    },
     async createLicenseDomain(id) {
       if (this.savedLicenses.find((item) => item.id === id))
         alert('this license is already in use')
@@ -118,7 +124,7 @@ export default {
           .then((response) => {
             this.createResponse = response.data
             this.$axios.get('/api/license/' + id).then((response) => {
-              this.savedLicenses.push(response.data)
+              this.bootstrap()
             })
           })
     },
@@ -165,10 +171,10 @@ export default {
         this.singleDomain = response.data
       })
       await this.$axios
-        .get('api/domain-license', { domainId: this.singleDomain.id })
+        .get('api/domain-license', { domainId: id })
         .then((response) => {
           this.licenseTokenList = response.data.filter(
-            (item) => item.domainId === this.singleDomain.id
+            (item) => item.domainId === id
           )
         })
 

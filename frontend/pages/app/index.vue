@@ -139,7 +139,7 @@
       </v-toolbar>
     </template>
     <template #[`item.actions`]="{ item }">
-      <v-row align="center" justify="center">
+      <v-row align="center" justify="start">
         <v-icon small @click="editItem(item)"> mdi-pencil </v-icon>
         <div class="mx-2"></div>
         <v-icon small @click="deleteItem(item)"> mdi-delete </v-icon>
@@ -147,11 +147,7 @@
         <v-icon small id="appDetails" @click="showDetails(item.id)">
           mdi-application
         </v-icon>
-        <div class="mx-2"></div>
       </v-row>
-    </template>
-    <template #no-data>
-      <v-btn color="primary" @click="getApps"> Reset </v-btn>
     </template>
   </v-data-table>
 </template>
