@@ -353,9 +353,9 @@ export default {
       this.createLicenseToken(id)
     },
 
-    async getSavedLicenses(id) {
+    getSavedLicenses(id) {
       this.savedLicenses = []
-      await this.$axios.get('/api/license/' + id).then((response) => {
+      this.$axios.get('/api/license/' + id).then((response) => {
         this.savedLicenses.push(response.data)
       })
     },
@@ -388,6 +388,7 @@ export default {
         })
     },
     async showDetails(id) {
+      this.savedLicenses = []
       await this.$axios.get('/api/token/' + id).then((response) => {
         this.singleToken = response.data
       })
@@ -397,9 +398,11 @@ export default {
           this.licenseTokenList = response.data.filter(
             (item) => item.tokenId === this.singleToken.id
           )
+          this.licenseTokenList.forEach((i) => this.getSavedLicenses(i.licenseId))
+
         })
 
-      this.licenseTokenList.forEach((i) => this.getSavedLicenses(i.licenseId))
+      
     },
 
     getLicenses() {
