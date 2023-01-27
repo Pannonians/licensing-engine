@@ -33,6 +33,20 @@ module.exports = (LicenseDomain, options) => {
     }
   };
 
+  const remove = async (req, res, next) => {
+    try {
+      const { id } = req.params;
+      const removeItem = await LicenseDomain.delete({
+        where: { id: id },
+      });
+
+      res.status(200).json(removeItem);
+    } catch (error) {
+      res.status(400);
+      next(error);
+    }
+  };
+
   // ======
   // Routes
   // ======
@@ -42,10 +56,12 @@ module.exports = (LicenseDomain, options) => {
   const actions = {
     create: [...options.middleware.create, create],
     readMany: [...options.middleware.readMany, readMany],
+    remove: [...options.middleware.remove, remove]
   };
 
   router.post("/", ...actions.create);
   router.get("/", ...actions.readMany);
+  router.delete("/:id", ...actions.remove);
 
   return router;
 };

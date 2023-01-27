@@ -94,6 +94,7 @@ router.use(
     middleware: {
       create: [],
       readMany: [],
+      remove: [],
     },
   })
 );
