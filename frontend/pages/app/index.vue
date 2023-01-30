@@ -139,7 +139,7 @@
       </v-toolbar>
     </template>
     <template #[`item.actions`]="{ item }">
-      <v-row align="center" justify="center">
+      <v-row align="center" justify="start">
         <v-icon small @click="editItem(item)"> mdi-pencil </v-icon>
         <div class="mx-2"></div>
         <v-icon small @click="deleteItem(item)"> mdi-delete </v-icon>
@@ -147,11 +147,7 @@
         <v-icon small id="appDetails" @click="showDetails(item.id)">
           mdi-application
         </v-icon>
-        <div class="mx-2"></div>
       </v-row>
-    </template>
-    <template #no-data>
-      <v-btn color="primary" @click="getApps"> Reset </v-btn>
     </template>
   </v-data-table>
 </template>
@@ -251,8 +247,9 @@ export default {
         const index = this.appList.findIndex((list) => list.id === id)
         if (~index) this.appList.splice(index, 1)
         this.createResponse = response.data
+        this.closeDelete()
+        this.$toast.show('App deleted, and all tokens if it had any')
       })
-      this.closeDelete()
     },
     updateApp(id) {
       this.$axios

@@ -1,10 +1,10 @@
 <template>
   <v-app dark>
     <v-navigation-drawer
-      v-model="drawer"
-      :mini-variant="miniVariant"
-      :clipped="clipped"
-      fixed
+      v-model="settings.drawer"
+      :mini-variant="settings.miniVariant"
+      :clipped="settings.clipped"
+      :fixed="settings.fixed"
       app
     >
       <v-list>
@@ -24,52 +24,44 @@
         </v-list-item>
       </v-list>
     </v-navigation-drawer>
-    <v-app-bar :clipped-left="clipped" fixed app>
-      <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
-      <v-btn icon @click.stop="miniVariant = !miniVariant">
-        <v-icon>mdi-{{ `chevron-${miniVariant ? 'right' : 'left'}` }}</v-icon>
+    <v-app-bar :clipped-left="settings.clipped" fixed app>
+      <v-app-bar-nav-icon @click.stop="settings.drawer = !settings.drawer" />
+      <v-btn icon @click.stop="settings.miniVariant = !settings.miniVariant">
+        <v-icon
+          >mdi-{{
+            `chevron-${settings.miniVariant ? 'right' : 'left'}`
+          }}</v-icon
+        >
       </v-btn>
-      <v-btn icon @click.stop="clipped = !clipped">
+      <v-btn icon @click.stop="settings.clipped = !settings.clipped">
         <v-icon>mdi-application</v-icon>
-      </v-btn>
-      <v-btn icon @click.stop="fixed = !fixed">
-        <v-icon>mdi-minus</v-icon>
       </v-btn>
       <v-toolbar-title>{{ title }}</v-toolbar-title>
       <v-spacer />
-      <v-btn icon @click.stop="rightDrawer = !rightDrawer">
-        <v-icon>mdi-menu</v-icon>
-      </v-btn>
     </v-app-bar>
     <v-main>
       <v-container>
         <Nuxt />
       </v-container>
     </v-main>
-    <v-navigation-drawer v-model="rightDrawer" :right="right" temporary fixed>
-      <v-list>
-        <v-list-item @click.native="right = !right">
-          <v-list-item-action>
-            <v-icon light> mdi-repeat </v-icon>
-          </v-list-item-action>
-          <v-list-item-title>Switch drawer (click me)</v-list-item-title>
-        </v-list-item>
-      </v-list>
-    </v-navigation-drawer>
-    <v-footer :absolute="!fixed" app>
+    <v-footer :absolute="!settings.fixed" app>
       <span>&copy; {{ new Date().getFullYear() }}</span>
     </v-footer>
   </v-app>
 </template>
 
-<script>;
+<script>
+const STORAGE_KEY = "LICENSING_ENGINE_SETTINGS"
 export default {
   name: 'DefaultLayout',
   data() {
     return {
-      clipped: false,
-      drawer: false,
-      fixed: false,
+      settings: {
+        clipped: false,
+        drawer: false,
+        fixed: false,
+        miniVariant: false,
+      },
       items: [
         {
           icon: 'mdi-home',
@@ -80,7 +72,6 @@ export default {
           icon: 'mdi-apps',
           title: 'App',
           to: '/app',
-
         },
         {
           icon: 'mdi-domain',
@@ -92,12 +83,31 @@ export default {
           title: 'License',
           to: '/license',
         },
+        {
+          icon: 'mdi-cog-outline',
+          title: 'Self test',
+          to: '/self-test'
+        }
       ],
-      miniVariant: false,
-      right: true,
-      rightDrawer: false,
       title: 'Case3DLicensing',
     }
   },
+  watch: {
+    settings: {
+      handler: function (val) {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(val))
+      },
+      deep: true,
+    },
+  },
+  mounted() {
+    const settings =  localStorage.getItem(STORAGE_KEY)
+    if (!settings) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(this.settings))
+    } else {
+      this.settings = JSON.parse(settings)
+    }
+  },
+  methods: {},
 }
 </script>

@@ -133,6 +133,10 @@
           <div class="mx-2"></div>
           <v-icon @click="deleteItem(item)"> mdi-delete </v-icon>
           <div class="mx-2"></div>
+          <v-icon small class="mr-2" @click="showDetails(item.id)">
+            mdi-application
+          </v-icon>
+          <div class="mx-2"></div>
         </v-row>
       </template>
       <template #no-data>
@@ -210,6 +214,9 @@ export default {
     this.getLicenses()
   },
   methods: {
+    showDetails(id) {
+      this.$router.push(`/license/${id}`)
+    },
     getLicenses() {
       this.$axios.get('/api/license').then((response) => {
         this.licenseList = response.data

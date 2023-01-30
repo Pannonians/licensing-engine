@@ -113,13 +113,16 @@
     </template>
     <template #[`item.actions`]="{ item }">
       <v-row align="center" justify="center">
-      <v-icon small class="mr-2" @click="editItem(item)"> mdi-pencil </v-icon>
-              <div class="mx-2"></div>
+        <v-icon small class="mr-2" @click="editItem(item)"> mdi-pencil </v-icon>
+        <div class="mx-2"></div>
 
-      <v-icon small @click="deleteItem(item)"> mdi-delete </v-icon>
-              <div class="mx-2"></div>
-<v-icon small class="mr-2" @click="showDetails(item.id)"> mdi-application </v-icon>
-              <div class="mx-2"></div>
+        <v-icon small @click="deleteItem(item)"> mdi-delete </v-icon>
+        <div class="mx-2"></div>
+        <v-icon small class="mr-2" @click="showDetails(item.id)">
+          mdi-application
+        </v-icon>
+
+        <div class="mx-2"></div>
       </v-row>
     </template>
     <template #no-data>
@@ -185,9 +188,8 @@ export default {
   },
 
   methods: {
-
     showDetails(id) {
-     this.$router.push( `/domain/${id}`)
+      this.$router.push(`/domain/${id}`)
     },
     getDomains() {
       this.$axios.get('/api/domain').then((response) => {
@@ -212,8 +214,9 @@ export default {
         const index = this.domainList.findIndex((list) => list.id === id)
         if (~index) this.domainList.splice(index, 1)
         this.createResponse = response.data
+        this.closeDelete()
+        this.$toast.show('Domain deleted')
       })
-      this.closeDelete()
     },
 
     updateDomain(id) {

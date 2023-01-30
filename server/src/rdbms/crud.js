@@ -1,5 +1,4 @@
 const express = require("express");
-const prisma = require("../prisma");
 
 module.exports = (Collection, options) => {
   const readMany = async (req, res, next) => {

@@ -15,7 +15,7 @@ datasource db {
 model License {
   id             String          @id @default(cuid())
   name           String          @db.VarChar(240)
-  description    String          @db.Text
+  description    String          @db.LongText
   DomainLicenses DomainLicense[]
   LicenseTokens  LicenseToken[]
 
@@ -33,8 +33,8 @@ model Domain {
 
 model DomainLicense {
   id        String  @id @default(cuid())
-  domain    Domain  @relation(fields: [domainId], references: [id])
-  license   License @relation(fields: [licenseId], references: [id])
+  domain    Domain  @relation(fields: [domainId], references: [id], onDelete: Cascade)
+  license   License @relation(fields: [licenseId], references: [id], onDelete: Cascade)
   domainId  String
   licenseId String
 
@@ -43,8 +43,8 @@ model DomainLicense {
 
 model LicenseToken {
   id        String  @id @default(cuid())
-  license   License @relation(fields: [licenseId], references: [id])
-  token     Token   @relation(fields: [tokenId], references: [id])
+  license   License @relation(fields: [licenseId], references: [id], onDelete: Cascade)
+  token     Token   @relation(fields: [tokenId], references: [id], onDelete: Cascade)
   licenseId String
   tokenId   String
 
@@ -64,6 +64,6 @@ model App {
   id          String  @id @default(cuid())
   name        String  @db.Char(100)
   active      Boolean @default(false)
-  description String  @db.Text
+  description String  @db.LongText
   tokens      Token[]
 }
