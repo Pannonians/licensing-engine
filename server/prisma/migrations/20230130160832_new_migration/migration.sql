@@ -2,7 +2,7 @@
 CREATE TABLE `License` (
     `id` VARCHAR(191) NOT NULL,
     `name` VARCHAR(240) NOT NULL,
-    `description` TEXT NOT NULL,
+    `description` LONGTEXT NOT NULL,
 
     UNIQUE INDEX `License_name_key`(`name`),
     PRIMARY KEY (`id`)
@@ -14,6 +14,7 @@ CREATE TABLE `Domain` (
     `name` CHAR(100) NOT NULL,
     `active` BOOLEAN NOT NULL DEFAULT false,
 
+    UNIQUE INDEX `Domain_name_key`(`name`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -23,6 +24,7 @@ CREATE TABLE `DomainLicense` (
     `domainId` VARCHAR(191) NOT NULL,
     `licenseId` VARCHAR(191) NOT NULL,
 
+    UNIQUE INDEX `DomainLicense_licenseId_domainId_key`(`licenseId`, `domainId`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -51,22 +53,22 @@ CREATE TABLE `App` (
     `id` VARCHAR(191) NOT NULL,
     `name` CHAR(100) NOT NULL,
     `active` BOOLEAN NOT NULL DEFAULT false,
-    `description` TEXT NOT NULL,
+    `description` LONGTEXT NOT NULL,
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- AddForeignKey
-ALTER TABLE `DomainLicense` ADD CONSTRAINT `DomainLicense_domainId_fkey` FOREIGN KEY (`domainId`) REFERENCES `Domain`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `DomainLicense` ADD CONSTRAINT `DomainLicense_domainId_fkey` FOREIGN KEY (`domainId`) REFERENCES `Domain`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `DomainLicense` ADD CONSTRAINT `DomainLicense_licenseId_fkey` FOREIGN KEY (`licenseId`) REFERENCES `License`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `DomainLicense` ADD CONSTRAINT `DomainLicense_licenseId_fkey` FOREIGN KEY (`licenseId`) REFERENCES `License`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `LicenseToken` ADD CONSTRAINT `LicenseToken_licenseId_fkey` FOREIGN KEY (`licenseId`) REFERENCES `License`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `LicenseToken` ADD CONSTRAINT `LicenseToken_licenseId_fkey` FOREIGN KEY (`licenseId`) REFERENCES `License`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `LicenseToken` ADD CONSTRAINT `LicenseToken_tokenId_fkey` FOREIGN KEY (`tokenId`) REFERENCES `Token`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `LicenseToken` ADD CONSTRAINT `LicenseToken_tokenId_fkey` FOREIGN KEY (`tokenId`) REFERENCES `Token`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `Token` ADD CONSTRAINT `Token_appId_fkey` FOREIGN KEY (`appId`) REFERENCES `App`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;

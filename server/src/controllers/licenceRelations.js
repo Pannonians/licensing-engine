@@ -8,11 +8,20 @@ const readMany = async (req, res, next) => {
       where: {
         LicenseTokens: {
           some: {
-            tokenId: id
-          }
-        }
+            tokenId: id,
+            token: {
+              App: {
+                active: true,
+              },
+            },
+          },
+        },
       },
     });
+
+    //po meni ovo nije validno, zato sto ces dobiti prazan niz licenci i kada nijedna licenca nije attachovana, sto nije error
+    if (!licenses) 
+    throw Error("app is not active");
 
     res.status(200).json(licenses);
   } catch (error) {
@@ -41,12 +50,12 @@ const remove = async (req, res, next) => {
   try {
     const { tokenId, licenseId } = req.params;
     const removeItem = await prisma.licenseToken.delete({
-      where: { 
+      where: {
         licenseId_tokenId: {
           licenseId,
-          tokenId
-        }
-       },
+          tokenId,
+        },
+      },
     });
 
     res.status(200).json(removeItem);
