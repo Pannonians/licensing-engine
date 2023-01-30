@@ -15,9 +15,11 @@ datasource db {
 model License {
   id             String          @id @default(cuid())
   name           String          @db.VarChar(240)
-  description    String          @db.Text
+  description    String          @db.LongText
   DomainLicenses DomainLicense[]
   LicenseTokens  LicenseToken[]
+
+  @@unique([name])
 }
 
 model Domain {
@@ -25,22 +27,28 @@ model Domain {
   name           String          @db.Char(100)
   active         Boolean         @default(false)
   DomainLicenses DomainLicense[]
+
+  @@unique([name])
 }
 
 model DomainLicense {
   id        String  @id @default(cuid())
-  domain    Domain  @relation(fields: [domainId], references: [id])
-  license   License @relation(fields: [licenseId], references: [id])
+  domain    Domain  @relation(fields: [domainId], references: [id], onDelete: Cascade)
+  license   License @relation(fields: [licenseId], references: [id], onDelete: Cascade)
   domainId  String
   licenseId String
+
+  @@unique([licenseId, domainId])
 }
 
 model LicenseToken {
   id        String  @id @default(cuid())
-  license   License @relation(fields: [licenseId], references: [id])
-  token     Token   @relation(fields: [tokenId], references: [id])
+  license   License @relation(fields: [licenseId], references: [id], onDelete: Cascade)
+  token     Token   @relation(fields: [tokenId], references: [id], onDelete: Cascade)
   licenseId String
   tokenId   String
+
+  @@unique([licenseId, tokenId])
 }
 
 model Token {
@@ -50,22 +58,12 @@ model Token {
   App           App?           @relation(fields: [appId], references: [id])
   appId         String?
   LicenseTokens LicenseToken[]
-  AppTokens     AppToken[]
 }
 
 model App {
-  id          String     @id @default(cuid())
-  name        String     @db.Char(100)
-  active      Boolean    @default(false)
-  description String     @db.Text
+  id          String  @id @default(cuid())
+  name        String  @db.Char(100)
+  active      Boolean @default(false)
+  description String  @db.LongText
   tokens      Token[]
-  AppTokens   AppToken[]
-}
-
-model AppToken {
-  id      String  @id @default(cuid())
-  app     App?    @relation(fields: [appId], references: [id])
-  appId   String?
-  token   Token   @relation(fields: [tokenId], references: [id])
-  tokenId String
 }

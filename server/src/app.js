@@ -18,10 +18,11 @@ var accessLogStream = rfs.createStream("access.log", {
 
 const app = express();
 
+app.use(express.json({limit: '15mb'}));
+app.use(express.urlencoded({limit: '15mb'}));
+
 const morganOptions =
   process.env.NODE_ENV === "development" ? {} : { stream: accessLogStream };
-
-console.log();
 
 app.use(morgan("combined", morganOptions));
 app.use(bodyParser.json());
