@@ -26,8 +26,8 @@ export default {
   methods: {
     testNetwork() {
       licensingEngineApi(
-        !this.token.length ? 'domain' : 'token',
-        this.token.length !== 0 ? this.token : null
+        this.token.length !== 36 ? 'domain' : 'token',
+        this.token.length === 36 ? this.token : null
       )
         .getLicenses[''].GET()
         .then(({ data }) => {
