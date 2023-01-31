@@ -5,7 +5,7 @@ const token = prisma.token;
 const clientParser = async (req, res, next) => {
   try {
     const sanitizeToken = req.headers.authorization;
-    if (!sanitizeToken) {
+    if (!sanitizeToken || (sanitizeToken && sanitizeToken.includes("Basic"))) {
       const host = req.headers.host;
 
       if (!host) {
@@ -21,7 +21,7 @@ const clientParser = async (req, res, next) => {
       next();
       return
     }
-    const sanitizedToken = sanitizeToken.replace(/Bearer|Basic|/, "").trim();
+    const sanitizedToken = sanitizeToken.replace("Bearer", "").trim();
     const clientToken = await token.findFirst({
       where: { token: sanitizedToken, active: true },
     });
