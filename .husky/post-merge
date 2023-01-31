@@ -1,4 +1,5 @@
 #!/usr/bin/env sh
 . "$(dirname -- "$0")/_/husky.sh"
 
-yarn frontend build && pm2 stop licensing_frontend && pm2 stop licensing_server && NODE_ENV=production HOST=0.0.0.0 pm2 start ecosystem.production.config.js
+yarn frontend build
+NODE_ENV=production HOST=0.0.0.0 pm2 start ecosystem.production.config.js
