@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "main": "index.js",
   "scripts": {
-    "start": "HOST=0.0.0.0 node src/index.js",
+    "start": "PORT=9080 node src/index.js",
     "dev": "nodemon src/index.js",
     "prisma:migrations:run": "yarn prisma migrate dev",
     "prisma:migrations:reset": "yarn prisma migrate reset"
