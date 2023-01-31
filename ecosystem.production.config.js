@@ -4,7 +4,7 @@ module.exports = {
       name: "licensing_server",
       cwd: "./server",
       script: "yarn",
-      args: "run dev",
+      args: "run start",
       env: {
         NODE_ENV: "development",
       },
@@ -16,7 +16,7 @@ module.exports = {
       name: "licensing_frontend",
       cwd: "./frontend",
       script: "yarn",
-      args: "run dev",
+      args: "run start",
     },
   ],
   deploy: {},
