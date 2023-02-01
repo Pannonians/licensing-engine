@@ -326,4 +326,9 @@ export default {
 .editor {
   height: 200px;
 }
+
+body {
+    overflow: hidden;
+    height: 100vh;
+}
 </style>
