@@ -34,8 +34,8 @@
               <v-card-title class="text-h5"> Licenses </v-card-title>
 
               <v-card-subtitle
-                >Manage your apps which provide tokens that you can use to
-                authenticate with Licensing Engine.</v-card-subtitle
+                >Manage your licenses accoring to your business case, 
+                which can be connected to tokens and/or domains.</v-card-subtitle
               >
             </v-card>
           </router-link>
