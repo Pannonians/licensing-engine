@@ -146,16 +146,8 @@
   </client-only>
 </template>
 <script>
-import 'quill/dist/quill.core.css'
-import 'quill/dist/quill.bubble.css'
-import 'quill/dist/quill.snow.css'
-import { quillEditor } from 'quill-vuejs'
-
 export default {
   name: 'License',
-  components: {
-    quillEditor,
-  },
   data() {
     return {
       dialog: false,
@@ -287,13 +279,13 @@ export default {
       })
     },
     onEditorBlur(quill) {
-      console.log('editor blur!', quill)
+      // console.log('editor blur!', quill)
     },
     onEditorFocus(quill) {
-      console.log('editor focus!', quill)
+      // console.log('editor focus!', quill)
     },
     onEditorReady(quill) {
-      console.log('editor ready!', quill)
+      // console.log('editor ready!', quill)
     },
   },
 }
