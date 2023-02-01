@@ -112,21 +112,15 @@
       </v-toolbar>
     </template>
     <template #[`item.actions`]="{ item }">
-      <v-row align="center" justify="center">
+      <v-row align="center" justify="end">
         <v-icon small class="mr-2" @click="editItem(item)"> mdi-pencil </v-icon>
         <div class="mx-2"></div>
-
         <v-icon small @click="deleteItem(item)"> mdi-delete </v-icon>
         <div class="mx-2"></div>
         <v-icon small class="mr-2" @click="showDetails(item.id)">
           mdi-application
         </v-icon>
-
-        <div class="mx-2"></div>
       </v-row>
-    </template>
-    <template #no-data>
-      <v-btn color="primary" @click="getDomains"> Reset </v-btn>
     </template>
   </v-data-table>
 </template>
@@ -143,7 +137,6 @@ export default {
       headers: [
         {
           text: 'Registered domains',
-          align: 'start',
           sortable: false,
           value: 'name',
         },
