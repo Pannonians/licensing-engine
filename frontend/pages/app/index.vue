@@ -38,7 +38,7 @@
                     <v-spacer></v-spacer>
                     <h4 class="white--text">description</h4>
                     <quill-editor
-                      id="app"
+                      id="quill"
                       ref="quillEditor"
                       v-model="editedItem.description"
                       class="editor"
@@ -88,7 +88,7 @@
                     <v-spacer></v-spacer>
                     <h4 class="white--text">description</h4>
                     <quill-editor
-                      id="app"
+                      id="quill"
                       ref="quillEditor"
                       v-model="editedItem.description"
                       class="editor"
@@ -302,23 +302,19 @@ export default {
 </script>
 
 <style>
-#app {
+.quill {
   color: #2c3e50;
   margin-top: 10px;
-  margin-bottom: 40px;
+  margin-bottom: 45px;
 }
 
 .quill-editor,
 .content {
   background-color: white;
+  margin-bottom: 40px;
 }
 
 .editor {
   height: 200px;
-}
-
-body {
-  overflow: hidden;
-  height: 100vh;
 }
 </style>
