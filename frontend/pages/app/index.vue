@@ -139,14 +139,12 @@
       </v-toolbar>
     </template>
     <template #[`item.actions`]="{ item }">
-      <v-row align="center" justify="start">
+      <v-row align="center" justify="end">
         <v-icon small @click="editItem(item)"> mdi-pencil </v-icon>
         <div class="mx-2"></div>
         <v-icon small @click="deleteItem(item)"> mdi-delete </v-icon>
         <div class="mx-2"></div>
-        <v-icon small id="appDetails" @click="showDetails(item.id)">
-          mdi-application
-        </v-icon>
+        <v-icon small @click="showDetails(item.id)"> mdi-application </v-icon>
       </v-row>
     </template>
   </v-data-table>
@@ -162,12 +160,12 @@ export default {
       headers: [
         {
           text: 'Registered apps',
-          align: 'start',
           sortable: false,
           value: 'name',
+          align: 'start',
         },
-        { text: 'Active', value: 'active' },
-        { text: 'Actions', value: 'actions', sortable: false },
+        { text: 'Active', value: 'active', align: 'center' },
+        { text: 'Actions', value: 'actions', sortable: false, align: 'end' },
       ],
       appList: [],
       createResponse: {},
@@ -317,5 +315,10 @@ export default {
 
 .editor {
   height: 200px;
+}
+
+body {
+  overflow: hidden;
+  height: 100vh;
 }
 </style>
