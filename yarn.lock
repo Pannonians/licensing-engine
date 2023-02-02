@@ -6052,9 +6052,9 @@ levn@^0.4.1:
     prelude-ls "^1.2.1"
     type-check "~0.4.0"
 
-"licensing-engine-sdk@git+ssh://git@pannonians.github.com:Pannonians/licensing-engine-sdk.git#^1.0":
+"licensing-engine-sdk@https://github.com/Pannonians/licensing-engine-sdk.git#^1.0":
   version "1.0.0"
-  resolved "git+ssh://git@pannonians.github.com:Pannonians/licensing-engine-sdk.git#5621aa4ed54bdde9ba9ab44bce438f4bba547342"
+  resolved "https://github.com/Pannonians/licensing-engine-sdk.git#5621aa4ed54bdde9ba9ab44bce438f4bba547342"
   dependencies:
     axios "^0.21.1"
 
@@ -8293,6 +8293,13 @@ quill-delta@^3.6.2:
     deep-equal "^1.0.1"
     extend "^3.0.2"
     fast-diff "1.1.2"
+
+quill-image-compress@^1.2.27:
+  version "1.2.27"
+  resolved "https://registry.yarnpkg.com/quill-image-compress/-/quill-image-compress-1.2.27.tgz#e480720f1ddd923e762022d62ae21bad9bc6dde8"
+  integrity sha512-Kz3K9NF1oJGdRqvTECf2DnIjvsBqNbaEEMB41Ifm2wuBrq4U1F9UbACTzqZAjr5tFeLzlV72mxW3hFFzHLVbYg==
+  dependencies:
+    quill "^1.3.7"
 
 quill-vuejs@^0.0.14:
   version "0.0.14"
