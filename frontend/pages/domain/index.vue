@@ -112,14 +112,12 @@
       </v-toolbar>
     </template>
     <template #[`item.actions`]="{ item }">
-      <v-row align="center" justify="end">
+      <v-row justify="end">
         <v-icon small class="mr-2" @click="editItem(item)"> mdi-pencil </v-icon>
-        <div class="mx-2"></div>
+        <div class="mr-2"></div>
         <v-icon small @click="deleteItem(item)"> mdi-delete </v-icon>
-        <div class="mx-2"></div>
-        <v-icon small class="mr-2" @click="showDetails(item.id)">
-          mdi-application
-        </v-icon>
+        <div class="mr-2"></div>
+        <v-icon small @click="showDetails(item.id)"> mdi-application </v-icon>
       </v-row>
     </template>
   </v-data-table>
@@ -141,7 +139,7 @@ export default {
           value: 'name',
         },
         { text: 'Active', value: 'active' },
-        { text: 'Actions', value: 'actions', sortable: false },
+        { text: 'Actions', value: 'actions', sortable: false, align: 'right' },
       ],
       domainList: [],
       createResponse: {},

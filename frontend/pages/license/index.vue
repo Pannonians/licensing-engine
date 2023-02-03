@@ -35,7 +35,7 @@
                     <v-spacer></v-spacer>
                     <h4 class="white--text">description</h4>
                     <quill-editor
-                      id="app"
+                      id="quill"
                       ref="quillEditor"
                       v-model="editedItem.description"
                       class="editor"
@@ -78,7 +78,7 @@
                     <v-spacer></v-spacer>
                     <h4 class="white--text">description</h4>
                     <quill-editor
-                      id="app"
+                      id="quill"
                       ref="quillEditor"
                       v-model="editedItem.description"
                       class="editor"
@@ -130,14 +130,12 @@
       </v-toolbar>
     </template>
     <template #[`item.actions`]="{ item }">
-      <v-row align="center" justify="end">
-        <v-icon small class="mx-2" @click="editItem(item)"> mdi-pencil </v-icon>
-        <div class="mx-2"></div>
+      <v-row justify="end">
+        <v-icon small @click="editItem(item)"> mdi-pencil </v-icon>
+        <div class="mr-2"></div>
         <v-icon small @click="deleteItem(item)"> mdi-delete </v-icon>
-        <div class="mx-2"></div>
-        <v-icon small class="mr-2" @click="showDetails(item.id)">
-          mdi-application
-        </v-icon>
+        <div class="mr-2"></div>
+        <v-icon small @click="showDetails(item.id)"> mdi-application </v-icon>
       </v-row>
     </template>
   </v-data-table>
@@ -157,8 +155,7 @@ export default {
           value: 'name',
           align: 'start',
         },
-        { text: '', value: '' },
-        { text: 'Actions', value: 'actions', sortable: false, align: 'end' },
+        { text: 'Actions', value: 'actions', sortable: false, align: 'right' },
       ],
       licenseList: [],
       createResponse: {},
@@ -290,30 +287,17 @@ export default {
 </script>
 
 <style>
-#app {
-  color: #2c3e50;
+#quill {
   margin-top: 10px;
-  margin-bottom: 40px;
 }
 
 .quill-editor,
 .content {
   background-color: white;
+  margin-bottom: 40px;
 }
 
 .editor {
   height: 500px;
-}
-
-.v-data-table-header th:last-of-type {
-  text-align: right !important;
-}
-
-.v-data-table-header th:nth-last-of-type(2) {
-  text-align: left !important;
-}
-
-.v-data-table td:nth-last-of-type(2) {
-  text-align: left !important;
 }
 </style>

@@ -1,5 +1,5 @@
 <template>
-  <v-data-table :headers="headers" :items="appList" class="elevation-1">
+  <v-data-table :headers="headers" :items="appList" item-key="name">
     <template #top>
       <v-toolbar flat>
         <v-toolbar-title>App List</v-toolbar-title>
@@ -7,7 +7,7 @@
         <v-spacer></v-spacer>
         <v-dialog v-model="dialog" max-width="800px">
           <template #activator="{ on, attrs }">
-            <v-btn color="primary" dark class="mb-2" v-bind="attrs" v-on="on">
+            <v-btn color="primary" dark class="mb-1" v-bind="attrs" v-on="on">
               New
             </v-btn>
           </template>
@@ -38,7 +38,7 @@
                     <v-spacer></v-spacer>
                     <h4 class="white--text">description</h4>
                     <quill-editor
-                      id="app"
+                      id="quill"
                       ref="quillEditor"
                       v-model="editedItem.description"
                       class="editor"
@@ -88,7 +88,7 @@
                     <v-spacer></v-spacer>
                     <h4 class="white--text">description</h4>
                     <quill-editor
-                      id="app"
+                      id="quill"
                       ref="quillEditor"
                       v-model="editedItem.description"
                       class="editor"
@@ -139,11 +139,11 @@
       </v-toolbar>
     </template>
     <template #[`item.actions`]="{ item }">
-      <v-row align="center" justify="end">
+      <v-row justify="end">
         <v-icon small @click="editItem(item)"> mdi-pencil </v-icon>
-        <div class="mx-2"></div>
+        <div class="mr-2"></div>
         <v-icon small @click="deleteItem(item)"> mdi-delete </v-icon>
-        <div class="mx-2"></div>
+        <div class="mr-2"></div>
         <v-icon small @click="showDetails(item.id)"> mdi-application </v-icon>
       </v-row>
     </template>
@@ -164,8 +164,16 @@ export default {
           value: 'name',
           align: 'start',
         },
-        { text: 'Active', value: 'active', align: 'center' },
-        { text: 'Actions', value: 'actions', sortable: false, align: 'end' },
+        {
+          text: 'Active',
+          value: 'active',
+        },
+        {
+          text: 'Actions',
+          value: 'actions',
+          sortable: false,
+          align: 'right',
+        },
       ],
       appList: [],
       createResponse: {},
@@ -302,23 +310,21 @@ export default {
 </script>
 
 <style>
-#app {
-  color: #2c3e50;
+#quill {
   margin-top: 10px;
-  margin-bottom: 40px;
 }
 
 .quill-editor,
 .content {
   background-color: white;
+  margin-bottom: 40px;
 }
 
 .editor {
   height: 200px;
 }
 
-body {
-  overflow: hidden;
-  height: 100vh;
+.v-data-table-header tr {
+  text-align: initial !important;
 }
 </style>
