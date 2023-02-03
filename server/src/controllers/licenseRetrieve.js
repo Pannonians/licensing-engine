@@ -38,7 +38,7 @@ const licenseRetrieve = async (req, res) => {
       });
 
       const licenseNames = pickUpLicensesToken.map((item) => item.name);
-      res.status(200).json(licenseNames);
+      res.status(200).json({ licenses: licenseNames });
       return;
     }
 
@@ -58,7 +58,7 @@ const licenseRetrieve = async (req, res) => {
       const pickUpLicensesDomainMapped = pickUpLicensesDomain.map(
         (item) => item.name
       );
-      res.status(200).json(pickUpLicensesDomainMapped);
+      res.status(200).json({ licenses: pickUpLicensesDomainMapped });
       return;
     }
     throw new Error(
