@@ -1,6 +1,6 @@
 <template>
-  <v-data-table :headers="headers" :items="appList" item-key = 'name'>
-    <template #top >
+  <v-data-table :headers="headers" :items="appList" item-key="name">
+    <template #top>
       <v-toolbar flat>
         <v-toolbar-title>App List</v-toolbar-title>
         <v-divider class="mx-4" inset vertical></v-divider>
@@ -139,7 +139,7 @@
       </v-toolbar>
     </template>
     <template #[`item.actions`]="{ item }">
-      <v-row justify="end" >
+      <v-row justify="end">
         <v-icon small @click="editItem(item)"> mdi-pencil </v-icon>
         <div class="mr-2"></div>
         <v-icon small @click="deleteItem(item)"> mdi-delete </v-icon>
@@ -310,10 +310,8 @@ export default {
 </script>
 
 <style>
-.quill {
-  color: #2c3e50;
+#quill {
   margin-top: 10px;
-  margin-bottom: 45px;
 }
 
 .quill-editor,
@@ -327,7 +325,6 @@ export default {
 }
 
 .v-data-table-header tr {
-text-align: initial !important;
+  text-align: initial !important;
 }
-
 </style>

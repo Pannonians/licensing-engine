@@ -287,10 +287,8 @@ export default {
 </script>
 
 <style>
-.quill {
-  color: #2c3e50;
+#quill {
   margin-top: 10px;
-  margin-bottom: 40px;
 }
 
 .quill-editor,
