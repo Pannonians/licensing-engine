@@ -103,7 +103,7 @@
                                 <v-text-field
                                   v-model="editedItem.token"
                                   disabled
-                                  label="domain name"
+                                  label="token name"
                                 ></v-text-field>
                               </v-col>
                               <v-col cols="12">
