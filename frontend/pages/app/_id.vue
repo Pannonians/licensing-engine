@@ -175,9 +175,6 @@
                     <div class="mx-2"></div>
                   </v-row>
                 </template>
-                <template #no-data>
-                  <v-btn color="primary" @click="getTokens"> Reset </v-btn>
-                </template>
               </v-data-table>
             </v-card>
           </v-sheet>
