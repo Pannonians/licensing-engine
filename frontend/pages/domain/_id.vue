@@ -27,7 +27,7 @@
               <template #default>
                 <thead>
                   <tr>
-                    <th class="text-left">License</th>
+                    <th class="text-left">Connected Licenses</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -78,7 +78,7 @@ export default {
       singleSelect: true,
       headers1: [
         {
-          text: 'Registered Licenses',
+          text: 'Available Licenses',
           align: 'start',
           value: 'name',
           sortable: false,
