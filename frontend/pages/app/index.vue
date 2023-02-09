@@ -41,7 +41,6 @@
                       id="quill"
                       ref="quillEditor"
                       v-model="editedItem.description"
-                      class="editor"
                       :options="editorOption"
                       @blur="onEditorBlur($event)"
                       @focus="onEditorFocus($event)"
@@ -91,7 +90,6 @@
                       id="quill"
                       ref="quillEditor"
                       v-model="editedItem.description"
-                      class="editor"
                       :options="editorOption"
                       @blur="onEditorBlur($event)"
                       @focus="onEditorFocus($event)"
@@ -318,11 +316,6 @@ export default {
 .quill-editor,
 .content {
   background-color: white;
-  margin-bottom: 40px;
-}
-
-.editor {
-  height: 200px;
 }
 
 .v-data-table-header tr {
