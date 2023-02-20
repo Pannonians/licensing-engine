@@ -74,4 +74,4 @@ Congrats on your setup! Here's a few helpful links to begin:
 - Backend server: [ExpressJS](https://expressjs.com/)
 - CSS / SCSS (for custom CSS if needed): [SCSS Lang](https://sass-lang.com/)
 
-> Happy coding!
+> Happy coding!!
