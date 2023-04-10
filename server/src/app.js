@@ -27,11 +27,15 @@ const morganOptions =
 app.use(morgan("combined", morganOptions));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.options('*', cors())
 app.use(cors({
-  origin: '*'
+  origin: [
+    "*",
+    "*:*",
+    "http://localhost:3000",
+    "http://localhost:8080",
+    "https://licensing.case-3d.com",
+  ]
 }));
-app.options('*', cors())
 app.use(helmet());
 
 app.use("/api", apiRoute);
