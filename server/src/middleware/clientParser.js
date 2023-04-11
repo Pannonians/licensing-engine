@@ -6,13 +6,14 @@ const clientParser = async (req, res, next) => {
   try {
     const sanitizeToken = req.headers.authorization;
     if (!sanitizeToken || (sanitizeToken && sanitizeToken.includes("Basic"))) {
-      const host = req.headers.host;
+      console.log('req.headers', req.headers)
+      const origin = req.headers.origin;
 
-      if (!host) {
+      if (!origin) {
         throw Error("invalid request");
       }
       const clientDomain = await domain.findFirst({
-        where: { name: host, active: true },
+        where: { name: origin, active: true },
       });
       if (!clientDomain) {
         throw Error("domain not found");
