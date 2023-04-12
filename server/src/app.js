@@ -18,6 +18,7 @@ var accessLogStream = rfs.createStream("access.log", {
 
 const app = express();
 
+app.use(cors());
 app.use(express.json({limit: '15mb'}));
 app.use(express.urlencoded({limit: '15mb'}));
 
@@ -27,16 +28,6 @@ const morganOptions =
 app.use(morgan("combined", morganOptions));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(cors({
-  credentials: true,
-  origin: [
-    "*",
-    "*:*",
-    "http://localhost:3000",
-    "http://localhost:8080",
-    "https://licensing.case-3d.com",
-  ]
-}));
 app.use(helmet());
 
 app.use("/api", apiRoute);
