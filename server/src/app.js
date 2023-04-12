@@ -27,7 +27,20 @@ const morganOptions =
 app.use(morgan("combined", morganOptions));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.options('*', cors())
+app.use(cors({
+  credentials: true,
+  origin: [
+    "*",
+    "*:*",
+    "http://*",
+    "https://*",
+    "http://localhost:3000",
+    "http://localhost:8080",
+    "https://licensing.case-3d.com",
+    "https://backend-think-home-demo.case-3d.com",
+    "https://think-home-demo.case-3d.com",
+  ]
+}));
 app.use(helmet());
 
 app.use("/api", apiRoute);
