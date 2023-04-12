@@ -27,13 +27,7 @@ const morganOptions =
 app.use(morgan("combined", morganOptions));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(cors({
-  credentials: true,
-  origin: [
-    "http://*",
-    "https://*",
-  ]
-}));
+app.options('*', cors())
 app.use(helmet());
 
 app.use("/api", apiRoute);
