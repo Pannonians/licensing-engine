@@ -1,6 +1,6 @@
 const express = require("express");
-// const cors = require("cors");
-const helmet = require("helmet");
+const cors = require("cors");
+// const helmet = require("helmet");
 var morgan = require("morgan");
 const errorMiddleware = require("./middleware/error.middleware");
 var path = require("path");
@@ -18,17 +18,17 @@ var accessLogStream = rfs.createStream("access.log", {
 
 const app = express();
 
-// app.use(cors());
 app.use(express.json({limit: '15mb'}));
 app.use(express.urlencoded({limit: '15mb'}));
 
 const morganOptions =
-  process.env.NODE_ENV === "development" ? {} : { stream: accessLogStream };
+process.env.NODE_ENV === "development" ? {} : { stream: accessLogStream };
 
 app.use(morgan("combined", morganOptions));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(helmet());
+// app.use(helmet());
+app.use(cors());
 
 app.use("/api", apiRoute);
 
