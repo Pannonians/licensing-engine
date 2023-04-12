@@ -1,6 +1,6 @@
 const express = require("express");
 const cors = require("cors");
-// const helmet = require("helmet");
+const helmet = require("helmet");
 var morgan = require("morgan");
 const errorMiddleware = require("./middleware/error.middleware");
 var path = require("path");
@@ -22,13 +22,19 @@ app.use(express.json({limit: '15mb'}));
 app.use(express.urlencoded({limit: '15mb'}));
 
 const morganOptions =
-process.env.NODE_ENV === "development" ? {} : { stream: accessLogStream };
+  process.env.NODE_ENV === "development" ? {} : { stream: accessLogStream };
 
 app.use(morgan("combined", morganOptions));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-// app.use(helmet());
-app.use(cors());
+app.use(cors({
+  credentials: true,
+  origin: [
+    "http://*",
+    "https://*",
+  ]
+}));
+app.use(helmet());
 
 app.use("/api", apiRoute);
 
