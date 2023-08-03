@@ -39,6 +39,8 @@ app.use(cors({
     "https://licensing.case-3d.com",
     "https://backend-think-home-demo.case-3d.com",
     "https://think-home-demo.case-3d.com",
+    "https://lustica-bay.case-3d.com",
+    "https://backend-lustica-bay.case-3d.com",
   ]
 }));
 app.use(helmet());

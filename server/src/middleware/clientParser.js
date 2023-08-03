@@ -22,7 +22,7 @@ const clientParser = async (req, res, next) => {
       next();
       return
     }
-    const sanitizedToken = sanitizeToken.replace("Bearer", "").trim();
+    const sanitizedToken = sanitizeToken.replace(/Bearer|bearer/g, "").trim();
     const clientToken = await token.findFirst({
       where: { token: sanitizedToken, active: true },
     });
